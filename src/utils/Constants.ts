@@ -22,7 +22,7 @@ export const GRID = {
  */
 export const GAME = {
     TOTAL_LEVELS: 10,
-    ALWAYS_UNLOCKED_LEVELS: [1, 2, 3] as readonly number[],
+    ALWAYS_UNLOCKED_LEVELS: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as readonly number[],
     STORAGE_KEY: 'credibleMachine',
 } as const;
 
