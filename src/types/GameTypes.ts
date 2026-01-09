@@ -2,6 +2,67 @@
  * Core game type definitions for Credible Machine
  */
 
+// ========== Object Types ==========
+
+/**
+ * Enum for all game object types
+ */
+export enum ObjectType {
+    BALL = 'ball',
+    RAMP = 'ramp',
+    PLATFORM = 'platform',
+    BASKET = 'basket',
+    SEESAW = 'seesaw',
+    TRAMPOLINE = 'trampoline',
+    DOMINO = 'domino',
+    FAN = 'fan',
+    PRESSURE_PLATE = 'pressurePlate'
+}
+
+/**
+ * Physics configuration for game objects
+ */
+export interface PhysicsConfig {
+    mass?: number;
+    friction?: number;
+    frictionAir?: number;
+    frictionStatic?: number;
+    restitution?: number;
+    isSensor?: boolean;
+    inertia?: number;
+}
+
+/**
+ * Configuration for a game object type
+ */
+export interface ObjectConfig {
+    type: ObjectType;
+    size: ObjectSize;
+    rotations: number[];
+    isStatic: boolean;
+    physics: PhysicsConfig;
+    label: string;
+}
+
+/**
+ * Trigger link between pressure plate and target object
+ */
+export interface TriggerLink {
+    sourceId: string;
+    targetId: string;
+}
+
+/**
+ * Options for creating game objects
+ */
+export interface GameObjectOptions {
+    isFixed?: boolean;
+    rotation?: number;
+    linkedObjectId?: string;
+}
+
+// ========== Grid Types ==========
+
 /**
  * Grid position in cell coordinates (0-19 for col, 0-14 for row)
  */

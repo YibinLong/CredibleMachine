@@ -25,3 +25,6 @@ dist-ssr
 
 # Project-specific
 CLAUDE.md
+
+# Playwright MCP test artifacts
+.playwright-mcp/

@@ -86,64 +86,64 @@
 
 ---
 
-## **EPIC 3: PHYSICS OBJECTS** ⬜
+## **EPIC 3: PHYSICS OBJECTS** ✅
 
-### **Story 3.1: Create Base Object System** ⬜
+### **Story 3.1: Create Base Object System** ✅
 
 **Story:** Implement the foundation for all physics objects
 
-- ⬜ **Task 3.1.1:** Create abstract GameObject base class with grid size, rotation, sprite properties
-- ⬜ **Task 3.1.2:** Implement object rotation system (90° increments, configurable directions per object type)
-- ⬜ **Task 3.1.3:** Create object factory for instantiating game objects
-- ⬜ **Task 3.1.4:** Implement static vs dynamic body distinction
-- ⬜ **Task 3.1.5:** Create object type enum and configuration registry
-- ⬜ **Task 3.1.6:** Implement pre-placed fixture system (locked objects that cannot be moved)
+- ✅ **Task 3.1.1:** Create abstract GameObject base class with grid size, rotation, sprite properties
+- ✅ **Task 3.1.2:** Implement object rotation system (90° increments, configurable directions per object type)
+- ✅ **Task 3.1.3:** Create object factory for instantiating game objects
+- ✅ **Task 3.1.4:** Implement static vs dynamic body distinction
+- ✅ **Task 3.1.5:** Create object type enum and configuration registry
+- ✅ **Task 3.1.6:** Implement pre-placed fixture system (locked objects that cannot be moved)
 
 **Acceptance:** Base object system supports all object types defined in PRD, rotation works correctly.
 
 ---
 
-### **Story 3.2: Implement Core Physics Objects** ⬜
+### **Story 3.2: Implement Core Physics Objects** ✅
 
 **Story:** Create the basic physics objects (Ball, Ramp, Platform, Basket)
 
-- ⬜ **Task 3.2.1:** Implement Ball (1x1, dynamic body, bowling ball feel with momentum, subtle air drag)
-- ⬜ **Task 3.2.2:** Implement Ramp (3x1, static, 45° incline, 4 rotation directions)
-- ⬜ **Task 3.2.3:** Implement Platform (2x1, static rectangular body, 2 orientations)
-- ⬜ **Task 3.2.4:** Implement Basket (2x2, static sensor for win detection, triggers on any contact)
-- ⬜ **Task 3.2.5:** Configure Ball physics (mass, friction, restitution for "bowling ball" feel)
-- ⬜ **Task 3.2.6:** Add placeholder sprites for all core objects
+- ✅ **Task 3.2.1:** Implement Ball (1x1, dynamic body, bowling ball feel with momentum, subtle air drag)
+- ✅ **Task 3.2.2:** Implement Ramp (3x1, static, 45° incline, 4 rotation directions)
+- ✅ **Task 3.2.3:** Implement Platform (2x1, static rectangular body, 2 orientations)
+- ✅ **Task 3.2.4:** Implement Basket (2x2, static sensor for win detection, triggers on any contact)
+- ✅ **Task 3.2.5:** Configure Ball physics (mass, friction, restitution for "bowling ball" feel)
+- ✅ **Task 3.2.6:** Add placeholder sprites for all core objects
 
 **Acceptance:** All core objects have correct physics behavior, Ball rolls and bounces realistically.
 
 ---
 
-### **Story 3.3: Implement Advanced Physics Objects** ⬜
+### **Story 3.3: Implement Advanced Physics Objects** ✅
 
 **Story:** Create the complex physics objects (Seesaw, Trampoline, Domino)
 
-- ⬜ **Task 3.3.1:** Implement Seesaw (3x1, pivots at center, ±45° tilt limit, catapult capability)
-- ⬜ **Task 3.3.2:** Implement Trampoline (2x1, static, >1.0 restitution to add energy)
-- ⬜ **Task 3.3.3:** Implement Domino (1x2, dynamic, hair-trigger sensitivity, can knock ball)
-- ⬜ **Task 3.3.4:** Configure seesaw pivot constraint in Matter.js
-- ⬜ **Task 3.3.5:** Configure trampoline bounce physics (ball bounces higher than drop height)
-- ⬜ **Task 3.3.6:** Configure domino physics (thin, tall, tips easily)
+- ✅ **Task 3.3.1:** Implement Seesaw (3x1, pivots at center, ±45° tilt limit, catapult capability)
+- ✅ **Task 3.3.2:** Implement Trampoline (2x1, static, >1.0 restitution to add energy)
+- ✅ **Task 3.3.3:** Implement Domino (1x2, dynamic, hair-trigger sensitivity, can knock ball)
+- ✅ **Task 3.3.4:** Configure seesaw pivot constraint in Matter.js
+- ✅ **Task 3.3.5:** Configure trampoline bounce physics (ball bounces higher than drop height)
+- ✅ **Task 3.3.6:** Configure domino physics (thin, tall, tips easily)
 
 **Acceptance:** Seesaw tilts and catapults, Trampoline adds energy, Dominoes fall in chain reactions.
 
 ---
 
-### **Story 3.4: Implement Interactive Objects** ⬜
+### **Story 3.4: Implement Interactive Objects** ✅
 
 **Story:** Create Fan and Pressure Plate with trigger system
 
-- ⬜ **Task 3.4.1:** Implement Fan (2x2, static, 4 rotation directions, 5-cell force range)
-- ⬜ **Task 3.4.2:** Implement Fan force application on objects in range
-- ⬜ **Task 3.4.3:** Implement Pressure Plate (1x1, static sensor, instant trigger on contact)
-- ⬜ **Task 3.4.4:** Create trigger link system (pressure plate → target object connection)
-- ⬜ **Task 3.4.5:** Implement visible connection line between pressure plate and linked object
-- ⬜ **Task 3.4.6:** Add Fan blade rotation animation (slow, visible individual blades)
-- ⬜ **Task 3.4.7:** Add Fan wind effect animation (lines/particles showing airflow)
+- ✅ **Task 3.4.1:** Implement Fan (2x2, static, 4 rotation directions, 5-cell force range)
+- ✅ **Task 3.4.2:** Implement Fan force application on objects in range
+- ✅ **Task 3.4.3:** Implement Pressure Plate (1x1, static sensor, instant trigger on contact)
+- ✅ **Task 3.4.4:** Create trigger link system (pressure plate → target object connection)
+- ✅ **Task 3.4.5:** Implement visible connection line between pressure plate and linked object
+- ✅ **Task 3.4.6:** Add Fan blade rotation animation (slow, visible individual blades)
+- ✅ **Task 3.4.7:** Add Fan wind effect animation (lines/particles showing airflow)
 
 **Acceptance:** Fan pushes objects within range, Pressure Plate activates linked objects instantly.
 
@@ -511,7 +511,7 @@
 |------|---------|-------|--------|
 | 1. Project Setup | 2 | 14 | ✅ |
 | 2. Core Infrastructure | 3 | 19 | ✅ |
-| 3. Physics Objects | 4 | 23 | ⬜ |
+| 3. Physics Objects | 4 | 23 | ✅ |
 | 4. Gameplay Mechanics | 4 | 27 | ⬜ |
 | 5. User Interface | 5 | 24 | ⬜ |
 | 6. Audio System | 3 | 12 | ⬜ |

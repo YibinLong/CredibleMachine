@@ -31,10 +31,7 @@ export class GameScene extends Scene {
         // Background color
         this.cameras.main.setBackgroundColor(COLORS.DARK_GRAY);
 
-        // Initialize Grid
-        this.grid = new Grid(this);
-
-        // Play area background (left side)
+        // Play area background (left side) - must be drawn first
         this.add.rectangle(
             GRID.PLAY_AREA_WIDTH / 2,
             GRID.PLAY_AREA_HEIGHT / 2,
@@ -51,6 +48,9 @@ export class GameScene extends Scene {
             height,
             COLORS.INVENTORY_BG
         );
+
+        // Initialize Grid
+        this.grid = new Grid(this);
 
         // Top bar
         this.createTopBar(width, gameState);
@@ -188,8 +188,8 @@ export class GameScene extends Scene {
         // Hide grid lines during simulation
         this.grid.hideGridLines();
 
-        // TODO: Start physics simulation
-        // This will be implemented in EPIC 3/4
+        // Physics runs automatically via Matter.js
+        // Objects will update themselves via the scene's update loop (to be implemented in EPIC 4)
     }
 
     private resetLevel() {
