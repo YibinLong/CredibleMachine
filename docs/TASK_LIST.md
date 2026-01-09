@@ -292,46 +292,46 @@
 
 ---
 
-## **EPIC 6: AUDIO SYSTEM** ⬜
+## **EPIC 6: AUDIO SYSTEM** 🟦
 
-### **Story 6.1: Implement Sound Effects** ⬜
+### **Story 6.1: Implement Sound Effects** 🟦
 
 **Story:** Create and integrate game sound effects
 
-- ⬜ **Task 6.1.1:** Generate bounce sound effect with JSFXR (universal for all surfaces)
-- ⬜ **Task 6.1.2:** Generate button click sound effect
-- ⬜ **Task 6.1.3:** Generate object rotation sound effect
-- ⬜ **Task 6.1.4:** Generate object placement sound effect
-- ⬜ **Task 6.1.5:** Generate victory sound effect
-- ⬜ **Task 6.1.6:** Integrate Phaser audio system for sound playback
-- ⬜ **Task 6.1.7:** Trigger bounce sound on ball collision events
-- ⬜ **Task 6.1.8:** Trigger UI sounds on button/rotation/placement actions
+- ⬜ **Task 6.1.1:** Generate bounce sound effect with JSFXR (universal for all surfaces) *(MANUAL: create bounce.wav using sfxr.me)*
+- ⬜ **Task 6.1.2:** Generate button click sound effect *(MANUAL: create click.wav using sfxr.me)*
+- ⬜ **Task 6.1.3:** Generate object rotation sound effect *(MANUAL: create rotate.wav using sfxr.me)*
+- ⬜ **Task 6.1.4:** Generate object placement sound effect *(MANUAL: create place.wav using sfxr.me)*
+- ⬜ **Task 6.1.5:** Generate victory sound effect *(MANUAL: create victory.wav using sfxr.me)*
+- ✅ **Task 6.1.6:** Integrate Phaser audio system for sound playback
+- ✅ **Task 6.1.7:** Trigger bounce sound on ball collision events
+- ✅ **Task 6.1.8:** Trigger UI sounds on button/rotation/placement actions
 
 **Acceptance:** All sound effects play at appropriate times, audio has retro chiptune quality.
 
 ---
 
-### **Story 6.2: Implement Background Music** ⬜
+### **Story 6.2: Implement Background Music** 🟦
 
 **Story:** Create and integrate looping background music
 
-- ⬜ **Task 6.2.1:** Create/source chiptune/FM synth style background music track
-- ⬜ **Task 6.2.2:** Configure seamless loop (no fade or pause between loops)
-- ⬜ **Task 6.2.3:** Implement music playback starting from Title Screen
-- ⬜ **Task 6.2.4:** Ensure music continues through scene transitions
+- ⬜ **Task 6.2.1:** Create/source chiptune/FM synth style background music track *(MANUAL: source bgm.mp3 from OpenGameArt or similar)*
+- ✅ **Task 6.2.2:** Configure seamless loop (no fade or pause between loops)
+- ✅ **Task 6.2.3:** Implement music playback starting from Title Screen
+- ✅ **Task 6.2.4:** Ensure music continues through scene transitions
 
 **Acceptance:** Background music loops seamlessly, plays throughout the game.
 
 ---
 
-### **Story 6.3: Implement Audio Controls** ⬜
+### **Story 6.3: Implement Audio Controls** ✅
 
 **Story:** Create mute functionality with persistence
 
-- ⬜ **Task 6.3.1:** Create master mute toggle that mutes both music and SFX
-- ⬜ **Task 6.3.2:** Add mute button to UI (visible in game scene)
-- ⬜ **Task 6.3.3:** Save mute preference to localStorage
-- ⬜ **Task 6.3.4:** Load and apply mute preference on game start
+- ✅ **Task 6.3.1:** Create master mute toggle that mutes both music and SFX
+- ✅ **Task 6.3.2:** Add mute button to UI (visible in game scene)
+- ✅ **Task 6.3.3:** Save mute preference to localStorage
+- ✅ **Task 6.3.4:** Load and apply mute preference on game start
 
 **Acceptance:** Mute toggle works, preference persists across sessions.
 
@@ -514,7 +514,7 @@
 | 3. Physics Objects | 4 | 23 | ✅ |
 | 4. Gameplay Mechanics | 4 | 27 | ✅ |
 | 5. User Interface | 5 | 24 | ✅ |
-| 6. Audio System | 3 | 12 | ⬜ |
+| 6. Audio System | 3 | 12 | 🟦 |
 | 7. Visual Assets | 3 | 25 | ⬜ |
 | 8. Level Design | 4 | 14 | ⬜ |
 | 9. Polish & Testing | 4 | 17 | ⬜ |
