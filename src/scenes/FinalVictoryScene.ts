@@ -3,10 +3,12 @@ import { GameState } from '../utils/GameState';
 import { AudioManager, SFX } from '../utils/AudioManager';
 import { ConfirmDialog } from '../ui/ConfirmDialog';
 import { FONTS } from '../utils/Constants';
+import { VictoryParticles } from '../utils/VictoryParticles';
 
 export class FinalVictoryScene extends Scene {
     private confirmDialog!: ConfirmDialog;
     private audioManager!: AudioManager;
+    private victoryParticles!: VictoryParticles;
 
     constructor() {
         super('FinalVictoryScene');
@@ -27,6 +29,10 @@ export class FinalVictoryScene extends Scene {
 
         // Background color (golden/celebratory)
         this.cameras.main.setBackgroundColor(0x443300);
+
+        // Start victory particle effect (extra particles for final victory!)
+        this.victoryParticles = new VictoryParticles(this);
+        this.victoryParticles.start(100);
 
         // Victory message
         this.add.text(width / 2, height / 3 - 30, 'CONGRATULATIONS!', {

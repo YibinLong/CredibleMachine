@@ -3,10 +3,12 @@ import { GameState } from '../utils/GameState';
 import { AudioManager, SFX } from '../utils/AudioManager';
 import { COLORS, FONTS, GAME } from '../utils/Constants';
 import { VictorySceneData } from '../types';
+import { VictoryParticles } from '../utils/VictoryParticles';
 
 export class VictoryScene extends Scene {
     private completedLevel: number = 1;
     private audioManager!: AudioManager;
+    private victoryParticles!: VictoryParticles;
 
     constructor() {
         super('VictoryScene');
@@ -41,6 +43,10 @@ export class VictoryScene extends Scene {
 
         // Background color (celebratory green)
         this.cameras.main.setBackgroundColor(COLORS.DARK_GREEN);
+
+        // Start victory particle effect
+        this.victoryParticles = new VictoryParticles(this);
+        this.victoryParticles.start(50);
 
         // Victory message
         this.add.text(width / 2, height / 3, 'LEVEL COMPLETE!', {
