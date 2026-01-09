@@ -39,6 +39,10 @@ export class Basket extends GameObject {
         return [0]; // Basket doesn't rotate
     }
 
+    protected getSpriteKey(): string {
+        return 'basket';
+    }
+
     protected createBody(): void {
         const pos = this.getPixelPosition();
         const width = this._size.cols * GRID.CELL_SIZE;
@@ -96,6 +100,14 @@ export class Basket extends GameObject {
     }
 
     protected render(): void {
+        // Use sprite if available
+        if (this.hasSpriteTexture()) {
+            this.createSprite();
+            this.renderFixedIndicator();
+            return;
+        }
+
+        // Fallback to graphics rendering
         const pos = this.getPixelPosition();
         const width = this._size.cols * GRID.CELL_SIZE;
         const height = this._size.rows * GRID.CELL_SIZE;

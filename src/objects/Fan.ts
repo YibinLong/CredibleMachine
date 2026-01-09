@@ -44,6 +44,10 @@ export class Fan extends GameObject {
         return [0, 90, 180, 270]; // Up, Right, Down, Left
     }
 
+    protected getSpriteKey(): string {
+        return 'fan';
+    }
+
     /**
      * Get the force direction based on rotation
      */

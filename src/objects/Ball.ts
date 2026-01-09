@@ -38,6 +38,10 @@ export class Ball extends GameObject {
         return [0]; // Ball doesn't rotate (visually)
     }
 
+    protected getSpriteKey(): string {
+        return 'ball';
+    }
+
     protected createBody(): void {
         const pos = this.getPixelPosition();
         const radius = GRID.CELL_SIZE / 2 - PHYSICS.BALL.RADIUS_OFFSET;
@@ -55,6 +59,14 @@ export class Ball extends GameObject {
     }
 
     protected render(): void {
+        // Use sprite if available
+        if (this.hasSpriteTexture()) {
+            this.createSprite();
+            this.renderFixedIndicator();
+            return;
+        }
+
+        // Fallback to graphics rendering
         const pos = this.getPixelPosition();
         const radius = GRID.CELL_SIZE / 2 - PHYSICS.BALL.RADIUS_OFFSET;
 
@@ -82,12 +94,22 @@ export class Ball extends GameObject {
     }
 
     /**
-     * Override update to sync graphics with physics body position
+     * Override update to sync visuals with physics body position
      */
     public update(_delta: number): void {
-        if (this.body && this.graphics) {
-            const bodyPos = this.body.position;
+        if (!this.body) return;
 
+        const bodyPos = this.body.position;
+
+        // Sync sprite with physics body
+        if (this.sprite) {
+            this.sprite.setPosition(bodyPos.x, bodyPos.y);
+            this.sprite.setRotation(this.body.angle);
+            return;
+        }
+
+        // Fallback: sync graphics with physics body
+        if (this.graphics) {
             // Clear and redraw at new position
             this.graphics.clear();
 

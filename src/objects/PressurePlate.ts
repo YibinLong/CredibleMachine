@@ -43,6 +43,10 @@ export class PressurePlate extends GameObject {
         return [0]; // Pressure plate doesn't rotate
     }
 
+    protected getSpriteKey(): string {
+        return 'pressure-plate';
+    }
+
     protected createBody(): void {
         const pos = this.getPixelPosition();
         const width = this._size.cols * GRID.CELL_SIZE;
@@ -201,6 +205,15 @@ export class PressurePlate extends GameObject {
     }
 
     protected render(): void {
+        // Use sprite if available (note: sprite won't show pressed state)
+        if (this.hasSpriteTexture() && !this.isPressed) {
+            this.createSprite();
+            this.updateConnectionLine();
+            this.renderFixedIndicator();
+            return;
+        }
+
+        // Fallback to graphics rendering (or when pressed for animation)
         const pos = this.getPixelPosition();
         const width = this._size.cols * GRID.CELL_SIZE;
         const height = this._size.rows * GRID.CELL_SIZE;
