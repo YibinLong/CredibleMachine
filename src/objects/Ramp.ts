@@ -37,6 +37,10 @@ export class Ramp extends GameObject {
         return [0, 90, 180, 270]; // 4 slope directions
     }
 
+    protected getSpriteKey(): string {
+        return 'ramp';
+    }
+
     /**
      * Get triangle vertices based on rotation
      * Returns vertices relative to center point
@@ -112,6 +116,15 @@ export class Ramp extends GameObject {
     }
 
     protected render(): void {
+        // Use sprite if available
+        if (this.hasSpriteTexture()) {
+            this.createSprite();
+            // Sprite rotation is handled by createSprite using this._rotation
+            this.renderFixedIndicator();
+            return;
+        }
+
+        // Fallback to graphics rendering
         const pos = this.getPixelPosition();
         const vertices = this.getTriangleVertices();
 
@@ -166,8 +179,13 @@ export class Ramp extends GameObject {
         }
         this.createBody();
 
-        // Update visuals
-        this.updateVisuals();
+        // Update sprite rotation if using sprites
+        if (this.sprite) {
+            this.sprite.setRotation((this._rotation * Math.PI) / 180);
+        } else {
+            // Update graphics visuals
+            this.updateVisuals();
+        }
 
         return true;
     }

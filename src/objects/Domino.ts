@@ -39,6 +39,10 @@ export class Domino extends GameObject {
         return [0, 90]; // Standing or lying
     }
 
+    protected getSpriteKey(): string {
+        return 'domino';
+    }
+
     protected createBody(): void {
         const pos = this.getPixelPosition();
 
@@ -73,6 +77,14 @@ export class Domino extends GameObject {
     }
 
     protected render(): void {
+        // Use sprite if available
+        if (this.hasSpriteTexture()) {
+            this.createSprite();
+            this.renderFixedIndicator();
+            return;
+        }
+
+        // Fallback to graphics rendering
         const pos = this.getPixelPosition();
 
         // Visual size matches grid cells
@@ -127,13 +139,23 @@ export class Domino extends GameObject {
     }
 
     /**
-     * Override update to sync graphics with physics body
+     * Override update to sync visuals with physics body
      */
     public update(_delta: number): void {
-        if (this.body && this.graphics) {
-            const bodyPos = this.body.position;
-            const angle = this.body.angle;
+        if (!this.body) return;
 
+        const bodyPos = this.body.position;
+        const angle = this.body.angle;
+
+        // Sync sprite with physics body
+        if (this.sprite) {
+            this.sprite.setPosition(bodyPos.x, bodyPos.y);
+            this.sprite.setRotation(angle);
+            return;
+        }
+
+        // Fallback: sync graphics with physics body
+        if (this.graphics) {
             this.graphics.clear();
 
             const width = this._size.cols * GRID.CELL_SIZE - 8;

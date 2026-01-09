@@ -43,6 +43,10 @@ export class Seesaw extends GameObject {
         return [0, 90]; // Horizontal or vertical orientation
     }
 
+    protected getSpriteKey(): string {
+        return 'seesaw';
+    }
+
     protected createBody(): void {
         const pos = this.getPixelPosition();
         const width = this._size.cols * GRID.CELL_SIZE;
