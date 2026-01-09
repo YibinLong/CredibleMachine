@@ -1,0 +1,24 @@
+{
+    "name": "credible-machine",
+    "description": "A web-based Rube Goldberg puzzle game inspired by The Incredible Machine.",
+    "version": "0.1.0",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "dev": "vite --config vite/config.dev.mjs",
+        "build": "vite build --config vite/config.prod.mjs",
+        "preview": "vite preview --config vite/config.prod.mjs",
+        "lint": "eslint src --ext .ts"
+    },
+    "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "^8.52.0",
+        "@typescript-eslint/parser": "^8.52.0",
+        "eslint": "^9.39.2",
+        "typescript": "~5.7.2",
+        "vite": "^6.3.1"
+    },
+    "dependencies": {
+        "phaser": "^3.90.0",
+        "terser": "^5.39.0"
+    }
+}
