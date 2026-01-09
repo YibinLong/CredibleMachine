@@ -107,13 +107,13 @@ export const PHYSICS = {
         FRICTION_AIR: 0.001,
     },
     FAN: {
-        FORCE_STRENGTH: 0.0005,
+        FORCE_STRENGTH: 0.003, // Increased from 0.0005 for noticeable push
         RANGE_CELLS: 5,
     },
     SEESAW: {
         MAX_ANGLE: 45, // degrees
-        TORQUE_MULTIPLIER: 0.001,
-        ANGULAR_DAMPING: 0.1,
+        TORQUE_MULTIPLIER: 0.02, // Increased from 0.001 for faster response
+        ANGULAR_DAMPING: 0.03, // Reduced from 0.1 for snappier movement
     },
     PRESSURE_PLATE: {
         // Sensor - no physics collision

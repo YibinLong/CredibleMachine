@@ -61,7 +61,7 @@ export class Trampoline extends GameObject {
     }
 
     /**
-     * Set up collision detection for visual bounce effect
+     * Set up collision detection for bounce effect with active impulse
      */
     private setupBounceEffect(): void {
         this.scene.matter.world.on('collisionstart', (event: Phaser.Physics.Matter.Events.CollisionStartEvent) => {
@@ -75,9 +75,23 @@ export class Trampoline extends GameObject {
 
                 const otherBody = isTrampA ? bodyB : bodyA;
 
-                // Trigger visual effect on any collision
+                // Apply bounce force and visual effect on collision with dynamic objects
                 if (otherBody.label && (otherBody.label.startsWith('ball_') || otherBody.label.startsWith('domino_'))) {
                     this.triggerBounceEffect();
+
+                    // Apply active upward impulse to make the bounce more pronounced
+                    // Get incoming velocity and reflect it with amplification
+                    const velocityY = otherBody.velocity.y;
+                    const bounceMultiplier = 1.5; // Bounce higher than drop
+
+                    // Only apply if object is moving downward (hitting from above)
+                    if (velocityY > 0) {
+                        const newVelocityY = -velocityY * bounceMultiplier;
+                        this.scene.matter.body.setVelocity(otherBody, {
+                            x: otherBody.velocity.x,
+                            y: newVelocityY
+                        });
+                    }
                 }
             }
         });

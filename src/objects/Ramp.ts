@@ -34,7 +34,7 @@ export class Ramp extends GameObject {
     }
 
     protected getRotationDirections(): number[] {
-        return [0, 90, 180, 270]; // 4 slope directions
+        return [0, 180]; // 2 states: horizontal mirror only
     }
 
     protected getSpriteKey(): string {
@@ -44,6 +44,7 @@ export class Ramp extends GameObject {
     /**
      * Get triangle vertices based on rotation
      * Returns vertices relative to center point
+     * Only 2 states: horizontal mirror (slopes left or right)
      */
     private getTriangleVertices(): { x: number; y: number }[] {
         const width = this._size.cols * GRID.CELL_SIZE;
@@ -51,38 +52,24 @@ export class Ramp extends GameObject {
         const halfW = width / 2;
         const halfH = height / 2;
 
-        // Base triangle (0°): slopes up-right
-        // Bottom-left, Bottom-right, Top-right
         switch (this._rotation) {
-            case 0: // Slopes up-right (ball rolls down-left)
-                return [
-                    { x: -halfW, y: halfH },  // Bottom-left
-                    { x: halfW, y: halfH },   // Bottom-right
-                    { x: halfW, y: -halfH },  // Top-right
-                ];
-            case 90: // Slopes down-right (ball rolls down-right)
+            case 0: // Slopes down-right: \ shape (ball rolls right)
                 return [
                     { x: -halfW, y: -halfH }, // Top-left
-                    { x: halfW, y: halfH },   // Bottom-right
                     { x: -halfW, y: halfH },  // Bottom-left
-                ];
-            case 180: // Slopes down-left (ball rolls down-right)
-                return [
-                    { x: -halfW, y: -halfH }, // Top-left
                     { x: halfW, y: halfH },   // Bottom-right
-                    { x: -halfW, y: halfH },  // Bottom-left
                 ];
-            case 270: // Slopes up-left (ball rolls down-right)
+            case 180: // Slopes down-left: / shape (ball rolls left)
                 return [
                     { x: halfW, y: -halfH },  // Top-right
-                    { x: halfW, y: halfH },   // Bottom-right
                     { x: -halfW, y: halfH },  // Bottom-left
+                    { x: halfW, y: halfH },   // Bottom-right
                 ];
-            default:
+            default: // Fallback to state 0
                 return [
+                    { x: -halfW, y: -halfH },
                     { x: -halfW, y: halfH },
                     { x: halfW, y: halfH },
-                    { x: halfW, y: -halfH },
                 ];
         }
     }
@@ -115,11 +102,24 @@ export class Ramp extends GameObject {
         }
     }
 
+    /**
+     * Override createSprite to use horizontal flip instead of rotation
+     */
+    protected createSprite(): void {
+        const key = this.getSpriteKey();
+        if (!key || !this.scene.textures.exists(key)) return;
+
+        const pos = this.getPixelPosition();
+        this.sprite = this.scene.add.sprite(pos.x, pos.y, key);
+        // Use horizontal flip for mirroring instead of rotation
+        this.sprite.setFlipX(this._rotation === 180);
+        this.sprite.setDepth(5);
+    }
+
     protected render(): void {
         // Use sprite if available
         if (this.hasSpriteTexture()) {
             this.createSprite();
-            // Sprite rotation is handled by createSprite using this._rotation
             this.renderFixedIndicator();
             return;
         }
@@ -179,9 +179,9 @@ export class Ramp extends GameObject {
         }
         this.createBody();
 
-        // Update sprite rotation if using sprites
+        // Update sprite with horizontal flip instead of rotation
         if (this.sprite) {
-            this.sprite.setRotation((this._rotation * Math.PI) / 180);
+            this.sprite.setFlipX(this._rotation === 180);
         } else {
             // Update graphics visuals
             this.updateVisuals();
