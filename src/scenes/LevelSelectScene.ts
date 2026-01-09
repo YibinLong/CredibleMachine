@@ -1,5 +1,6 @@
 import { Scene, GameObjects } from 'phaser';
 import { GameState } from '../utils/GameState';
+import { AudioManager, SFX } from '../utils/AudioManager';
 import { ConfirmDialog } from '../ui/ConfirmDialog';
 import { COLORS, FONTS, GAME } from '../utils/Constants';
 import { LevelStatus } from '../types';
@@ -7,6 +8,7 @@ import { LevelStatus } from '../types';
 export class LevelSelectScene extends Scene {
     private levelButtons: GameObjects.Text[] = [];
     private confirmDialog!: ConfirmDialog;
+    private audioManager!: AudioManager;
 
     constructor() {
         super('LevelSelectScene');
@@ -15,6 +17,10 @@ export class LevelSelectScene extends Scene {
     create() {
         const { width, height } = this.cameras.main;
         const gameState = GameState.getInstance();
+
+        // Update audio manager scene reference
+        this.audioManager = AudioManager.getInstance();
+        this.audioManager.setScene(this);
 
         // Background color
         this.cameras.main.setBackgroundColor(COLORS.MEDIUM_BLUE);
@@ -56,6 +62,7 @@ export class LevelSelectScene extends Scene {
 
         backButton.setInteractive({ useHandCursor: true });
         backButton.on('pointerdown', () => {
+            this.audioManager.playSound(SFX.CLICK);
             this.scene.start('TitleScene');
         });
 
@@ -69,6 +76,7 @@ export class LevelSelectScene extends Scene {
 
             resetButton.setInteractive({ useHandCursor: true });
             resetButton.on('pointerdown', () => {
+                this.audioManager.playSound(SFX.CLICK);
                 this.showResetConfirmation();
             });
         }
@@ -126,6 +134,7 @@ export class LevelSelectScene extends Scene {
         if (isInteractive) {
             button.setInteractive({ useHandCursor: true });
             button.on('pointerdown', () => {
+                this.audioManager.playSound(SFX.CLICK);
                 this.scene.start('GameScene', { level: levelNum });
             });
         }

@@ -12,6 +12,7 @@
 import { Scene } from 'phaser';
 import { Grid } from '../utils/Grid';
 import { GameState } from '../utils/GameState';
+import { AudioManager, SFX } from '../utils/AudioManager';
 import { ConfirmDialog } from '../ui/ConfirmDialog';
 import { InventoryPanel } from '../ui/InventoryPanel';
 import { DragDropManager } from '../ui/DragDropManager';
@@ -32,6 +33,7 @@ export class GameScene extends Scene {
     private inventoryPanel!: InventoryPanel;
     private dragDropManager!: DragDropManager;
     private confirmDialog!: ConfirmDialog;
+    private audioManager!: AudioManager;
 
     // UI elements
     private muteButton!: Phaser.GameObjects.Text;
@@ -67,6 +69,10 @@ export class GameScene extends Scene {
     create() {
         const { width, height } = this.cameras.main;
         const gameState = GameState.getInstance();
+
+        // Update audio manager scene reference
+        this.audioManager = AudioManager.getInstance();
+        this.audioManager.setScene(this);
 
         // Load level data
         this.levelData = getLevelData(this.currentLevel);
@@ -141,8 +147,31 @@ export class GameScene extends Scene {
         // Set up object interaction
         this.setupObjectInteraction();
 
+        // Set up ball collision sound
+        this.setupCollisionSound();
+
         // Pause physics until user clicks Play (fixes ball falling immediately on load)
         this.matter.world.pause();
+    }
+
+    /**
+     * Set up collision detection for ball bounce sound
+     */
+    private setupCollisionSound(): void {
+        this.matter.world.on('collisionstart', (event: Phaser.Physics.Matter.Events.CollisionStartEvent) => {
+            if (!this.isSimulating) return;
+
+            for (const pair of event.pairs) {
+                const labelA = pair.bodyA.label || '';
+                const labelB = pair.bodyB.label || '';
+
+                // Check if ball is involved in collision
+                if (labelA.includes('ball') || labelB.includes('ball')) {
+                    this.audioManager.playSound(SFX.BOUNCE);
+                    break; // Only play once per collision frame
+                }
+            }
+        });
     }
 
     /**
@@ -321,7 +350,7 @@ export class GameScene extends Scene {
         this.hasPlacedObjects = this.placedObjects.length > 0;
     }
 
-    private createTopBar(width: number, gameState: GameState) {
+    private createTopBar(width: number, _gameState: GameState) {
         // Back button
         const backBtn = this.add.text(20, 20, '< BACK', {
             fontFamily: FONTS.PRIMARY,
@@ -330,10 +359,13 @@ export class GameScene extends Scene {
         }).setOrigin(0, 0);
 
         backBtn.setInteractive({ useHandCursor: true });
-        backBtn.on('pointerdown', () => this.handleBackButton());
+        backBtn.on('pointerdown', () => {
+            this.audioManager.playSound(SFX.CLICK);
+            this.handleBackButton();
+        });
 
         // Mute toggle button
-        this.muteButton = this.add.text(width - 20, 20, this.getMuteText(gameState.isAudioMuted()), {
+        this.muteButton = this.add.text(width - 20, 20, this.getMuteText(this.audioManager.isMuted()), {
             fontFamily: FONTS.PRIMARY,
             fontSize: '16px',
             color: '#ffffff'
@@ -341,7 +373,7 @@ export class GameScene extends Scene {
 
         this.muteButton.setInteractive({ useHandCursor: true });
         this.muteButton.on('pointerdown', () => {
-            const muted = gameState.toggleAudioMuted();
+            const muted = this.audioManager.toggleMute();
             this.muteButton.setText(this.getMuteText(muted));
         });
     }
@@ -357,7 +389,10 @@ export class GameScene extends Scene {
         }).setOrigin(0.5);
 
         this.playButton.setInteractive({ useHandCursor: true });
-        this.playButton.on('pointerdown', () => this.startSimulation());
+        this.playButton.on('pointerdown', () => {
+            this.audioManager.playSound(SFX.CLICK);
+            this.startSimulation();
+        });
 
         // Reset button
         this.resetButton = this.add.text(GRID.PLAY_AREA_WIDTH / 2 + 80, barY, '[ RESET ]', {
@@ -367,7 +402,10 @@ export class GameScene extends Scene {
         }).setOrigin(0.5);
 
         this.resetButton.setInteractive({ useHandCursor: true });
-        this.resetButton.on('pointerdown', () => this.resetLevel());
+        this.resetButton.on('pointerdown', () => {
+            this.audioManager.playSound(SFX.CLICK);
+            this.resetLevel();
+        });
     }
 
     private setupKeyboardShortcuts() {

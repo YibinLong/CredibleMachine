@@ -1,10 +1,12 @@
 import { Scene } from 'phaser';
 import { GameState } from '../utils/GameState';
+import { AudioManager, SFX } from '../utils/AudioManager';
 import { ConfirmDialog } from '../ui/ConfirmDialog';
 import { FONTS } from '../utils/Constants';
 
 export class FinalVictoryScene extends Scene {
     private confirmDialog!: ConfirmDialog;
+    private audioManager!: AudioManager;
 
     constructor() {
         super('FinalVictoryScene');
@@ -12,6 +14,13 @@ export class FinalVictoryScene extends Scene {
 
     create() {
         const { width, height } = this.cameras.main;
+
+        // Update audio manager scene reference
+        this.audioManager = AudioManager.getInstance();
+        this.audioManager.setScene(this);
+
+        // Play victory sound
+        this.audioManager.playSound(SFX.VICTORY);
 
         // Save final level completion (in case we got here directly)
         GameState.getInstance().completeLevel(10);
@@ -54,6 +63,7 @@ export class FinalVictoryScene extends Scene {
 
         playAgainBtn.setInteractive({ useHandCursor: true });
         playAgainBtn.on('pointerdown', () => {
+            this.audioManager.playSound(SFX.CLICK);
             this.scene.start('TitleScene');
         });
 
@@ -66,6 +76,7 @@ export class FinalVictoryScene extends Scene {
 
         resetBtn.setInteractive({ useHandCursor: true });
         resetBtn.on('pointerdown', () => {
+            this.audioManager.playSound(SFX.CLICK);
             this.showResetConfirmation();
         });
 

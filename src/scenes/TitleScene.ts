@@ -1,10 +1,12 @@
 import { Scene, GameObjects } from 'phaser';
 import { GameState } from '../utils/GameState';
+import { AudioManager, SFX } from '../utils/AudioManager';
 import { COLORS, FONTS } from '../utils/Constants';
 
 export class TitleScene extends Scene {
     private playButton!: GameObjects.Text;
     private muteButton!: GameObjects.Text;
+    private audioManager!: AudioManager;
 
     constructor() {
         super('TitleScene');
@@ -13,6 +15,11 @@ export class TitleScene extends Scene {
     create() {
         const { width, height } = this.cameras.main;
         const gameState = GameState.getInstance();
+
+        // Initialize audio manager and start background music
+        this.audioManager = AudioManager.getInstance();
+        this.audioManager.init(this);
+        this.audioManager.playMusic();
 
         // Background color (MS-DOS blue)
         this.cameras.main.setBackgroundColor(COLORS.DARK_BLUE);
@@ -44,6 +51,7 @@ export class TitleScene extends Scene {
 
         this.playButton.setInteractive({ useHandCursor: true });
         this.playButton.on('pointerdown', () => {
+            this.audioManager.playSound(SFX.CLICK);
             this.scene.start('LevelSelectScene');
         });
 
@@ -56,7 +64,7 @@ export class TitleScene extends Scene {
 
         this.muteButton.setInteractive({ useHandCursor: true });
         this.muteButton.on('pointerdown', () => {
-            const muted = gameState.toggleAudioMuted();
+            const muted = this.audioManager.toggleMute();
             this.muteButton.setText(this.getMuteText(muted));
         });
 
