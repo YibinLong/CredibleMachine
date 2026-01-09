@@ -1,18 +1,49 @@
+/**
+ * GameScene - Main gameplay scene
+ *
+ * Features:
+ * - Level loading with fixtures and inventory
+ * - Drag-and-drop object placement
+ * - Object rotation and repositioning
+ * - Simulation controls (Play/Reset)
+ * - Victory detection and transition
+ */
+
 import { Scene } from 'phaser';
 import { Grid } from '../utils/Grid';
 import { GameState } from '../utils/GameState';
 import { ConfirmDialog } from '../ui/ConfirmDialog';
+import { InventoryPanel } from '../ui/InventoryPanel';
+import { DragDropManager } from '../ui/DragDropManager';
 import { GRID, COLORS, FONTS, UI } from '../utils/Constants';
-import { GameSceneData } from '../types';
+import { GameSceneData, LevelData, SimulationSnapshot } from '../types';
+import { getLevelData } from '../data/levels';
+import { createObject } from '../objects/ObjectFactory';
+import { GameObject } from '../objects/GameObject';
 
 export class GameScene extends Scene {
     private currentLevel: number = 1;
+    private levelData: LevelData | null = null;
     private isSimulating: boolean = false;
     private hasPlacedObjects: boolean = false;
 
+    // Core systems
     private grid!: Grid;
+    private inventoryPanel!: InventoryPanel;
+    private dragDropManager!: DragDropManager;
     private confirmDialog!: ConfirmDialog;
+
+    // UI elements
     private muteButton!: Phaser.GameObjects.Text;
+    private playButton!: Phaser.GameObjects.Text;
+    private resetButton!: Phaser.GameObjects.Text;
+
+    // Game objects
+    private placedObjects: GameObject[] = [];
+    private fixtureObjects: GameObject[] = [];
+
+    // Simulation state for reset
+    private preSimulationSnapshot: SimulationSnapshot | null = null;
 
     constructor() {
         super('GameScene');
@@ -22,16 +53,27 @@ export class GameScene extends Scene {
         this.currentLevel = data.level || 1;
         this.isSimulating = false;
         this.hasPlacedObjects = false;
+        this.placedObjects = [];
+        this.fixtureObjects = [];
+        this.preSimulationSnapshot = null;
     }
 
     create() {
         const { width, height } = this.cameras.main;
         const gameState = GameState.getInstance();
 
+        // Load level data
+        this.levelData = getLevelData(this.currentLevel);
+        if (!this.levelData) {
+            console.error(`Level ${this.currentLevel} not found!`);
+            this.scene.start('LevelSelectScene');
+            return;
+        }
+
         // Background color
         this.cameras.main.setBackgroundColor(COLORS.DARK_GRAY);
 
-        // Play area background (left side) - must be drawn first
+        // Play area background (left side)
         this.add.rectangle(
             GRID.PLAY_AREA_WIDTH / 2,
             GRID.PLAY_AREA_HEIGHT / 2,
@@ -52,7 +94,7 @@ export class GameScene extends Scene {
         // Initialize Grid
         this.grid = new Grid(this);
 
-        // Top bar
+        // Create top bar
         this.createTopBar(width, gameState);
 
         // Level indicator
@@ -62,33 +104,132 @@ export class GameScene extends Scene {
             color: '#ffffff'
         }).setOrigin(0.5);
 
-        // Placeholder text for play area (will be replaced when grid system is in use)
-        this.add.text(GRID.PLAY_AREA_WIDTH / 2, GRID.PLAY_AREA_HEIGHT / 2, 'Play Area\n(Grid Ready)', {
+        // Level name
+        this.add.text(GRID.PLAY_AREA_WIDTH / 2, 55, this.levelData.name, {
             fontFamily: FONTS.PRIMARY,
-            fontSize: '24px',
-            color: '#444444',
-            align: 'center'
+            fontSize: '14px',
+            color: '#888888'
         }).setOrigin(0.5);
 
-        // Inventory header
-        this.add.text(GRID.PLAY_AREA_WIDTH + UI.INVENTORY_WIDTH / 2, 100, 'INVENTORY', {
-            fontFamily: FONTS.PRIMARY,
-            fontSize: '18px',
-            color: '#ffffff'
-        }).setOrigin(0.5);
+        // Create inventory panel
+        this.inventoryPanel = new InventoryPanel(this);
+        this.add.existing(this.inventoryPanel);
+        this.inventoryPanel.loadInventory(this.levelData.inventory);
 
-        // Bottom bar with buttons
+        // Create drag-drop manager
+        this.dragDropManager = new DragDropManager(this, this.grid, this.inventoryPanel);
+
+        // Create bottom bar
         this.createBottomBar();
 
         // Create confirmation dialog
         this.confirmDialog = new ConfirmDialog(this);
         this.add.existing(this.confirmDialog);
 
-        // Keyboard shortcuts
+        // Set up keyboard shortcuts
         this.setupKeyboardShortcuts();
 
-        // Show grid lines for demo (can be triggered by drag later)
-        // this.grid.showGridLines();
+        // Load fixture objects
+        this.loadFixtures();
+
+        // Set up object interaction
+        this.setupObjectInteraction();
+    }
+
+    /**
+     * Load pre-placed fixture objects from level data
+     */
+    private loadFixtures(): void {
+        if (!this.levelData) return;
+
+        for (const fixture of this.levelData.fixtures) {
+            const obj = createObject(
+                this,
+                this.grid,
+                fixture.type,
+                fixture.position,
+                {
+                    isFixed: true,
+                    rotation: fixture.rotation ?? 0,
+                    linkedObjectId: fixture.linkedObjectId,
+                }
+            );
+
+            if (obj) {
+                this.fixtureObjects.push(obj);
+            }
+        }
+    }
+
+    /**
+     * Set up click interaction for placed objects
+     * Click without drag = rotate, drag = reposition
+     */
+    private setupObjectInteraction(): void {
+        let clickedObject: GameObject | null = null;
+        let hasMoved = false;
+
+        this.input.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
+            if (this.isSimulating) return;
+            if (this.confirmDialog.isShowing()) return;
+            if (this.dragDropManager.getIsDragging()) return;
+
+            // Only handle left clicks in play area
+            if (!pointer.leftButtonDown()) return;
+            if (pointer.x >= GRID.PLAY_AREA_WIDTH) return;
+
+            // Find object at click position
+            const gridPos = this.grid.pixelToCell({ x: pointer.x, y: pointer.y });
+            const occupancy = this.grid.getOccupancy(gridPos);
+
+            clickedObject = null;
+            hasMoved = false;
+
+            if (occupancy) {
+                const obj = this.findObjectById(occupancy.objectId);
+                if (obj && !obj.isFixed) {
+                    clickedObject = obj;
+                }
+            }
+        });
+
+        // Track movement to distinguish click from drag
+        this.input.on('pointermove', (pointer: Phaser.Input.Pointer) => {
+            if (!clickedObject) return;
+            if (!pointer.isDown) return;
+            if (this.dragDropManager.getIsDragging()) return;
+
+            // Start drag on first movement
+            if (!hasMoved) {
+                hasMoved = true;
+                this.dragDropManager.startPlacedObjectDrag(clickedObject);
+                clickedObject = null;
+            }
+        });
+
+        // On pointer up, if no movement occurred, rotate the object
+        this.input.on('pointerup', () => {
+            if (clickedObject && !hasMoved) {
+                this.dragDropManager.handlePlacedObjectClick(clickedObject);
+            }
+            clickedObject = null;
+            hasMoved = false;
+        });
+    }
+
+    /**
+     * Find an object by its ID
+     */
+    private findObjectById(id: string): GameObject | null {
+        // Check placed objects
+        for (const obj of this.placedObjects) {
+            if (obj.id === id) return obj;
+        }
+        // Check fixtures
+        for (const obj of this.fixtureObjects) {
+            if (obj.id === id) return obj;
+        }
+        return null;
     }
 
     private createTopBar(width: number, gameState: GameState) {
@@ -120,24 +261,24 @@ export class GameScene extends Scene {
         const barY = UI.GAME_HEIGHT - 40;
 
         // Play button
-        const playBtn = this.add.text(GRID.PLAY_AREA_WIDTH / 2 - 80, barY, '[ PLAY ]', {
+        this.playButton = this.add.text(GRID.PLAY_AREA_WIDTH / 2 - 80, barY, '[ PLAY ]', {
             fontFamily: FONTS.PRIMARY,
             fontSize: '24px',
             color: '#00ff00'
         }).setOrigin(0.5);
 
-        playBtn.setInteractive({ useHandCursor: true });
-        playBtn.on('pointerdown', () => this.startSimulation());
+        this.playButton.setInteractive({ useHandCursor: true });
+        this.playButton.on('pointerdown', () => this.startSimulation());
 
         // Reset button
-        const resetBtn = this.add.text(GRID.PLAY_AREA_WIDTH / 2 + 80, barY, '[ RESET ]', {
+        this.resetButton = this.add.text(GRID.PLAY_AREA_WIDTH / 2 + 80, barY, '[ RESET ]', {
             fontFamily: FONTS.PRIMARY,
             fontSize: '24px',
             color: '#ff6600'
         }).setOrigin(0.5);
 
-        resetBtn.setInteractive({ useHandCursor: true });
-        resetBtn.on('pointerdown', () => this.resetLevel());
+        this.resetButton.setInteractive({ useHandCursor: true });
+        this.resetButton.on('pointerdown', () => this.resetLevel());
     }
 
     private setupKeyboardShortcuts() {
@@ -162,7 +303,7 @@ export class GameScene extends Scene {
             }
         });
 
-        // Ctrl+Z = Undo last placement (edit mode only) - placeholder for future
+        // Ctrl+Z = Undo last placement (edit mode only)
         this.input.keyboard?.on('keydown-Z', (event: KeyboardEvent) => {
             if (event.ctrlKey && !this.isSimulating && !this.confirmDialog.isShowing()) {
                 this.undoLastPlacement();
@@ -183,29 +324,116 @@ export class GameScene extends Scene {
 
     private startSimulation() {
         if (this.isSimulating) return;
+
+        // Take snapshot before simulation
+        this.takeSnapshot();
+
         this.isSimulating = true;
 
-        // Hide grid lines during simulation
+        // Update UI
+        this.playButton.setColor('#666666');
+
+        // Hide grid lines
         this.grid.hideGridLines();
 
-        // Physics runs automatically via Matter.js
-        // Objects will update themselves via the scene's update loop (to be implemented in EPIC 4)
+        // Enable physics for all dynamic objects
+        this.matter.world.resume();
     }
 
     private resetLevel() {
+        if (this.preSimulationSnapshot) {
+            // Restore from snapshot
+            this.restoreFromSnapshot();
+        } else {
+            // Full reset
+            this.isSimulating = false;
+            this.hasPlacedObjects = false;
+
+            // Clear placed objects
+            for (const obj of this.placedObjects) {
+                obj.destroy();
+            }
+            this.placedObjects = [];
+
+            // Reset fixtures
+            for (const obj of this.fixtureObjects) {
+                if ('reset' in obj && typeof obj.reset === 'function') {
+                    obj.reset();
+                }
+            }
+
+            // Reload inventory
+            if (this.levelData) {
+                this.inventoryPanel.loadInventory(this.levelData.inventory);
+            }
+        }
+
+        // Update UI
+        this.playButton.setColor('#00ff00');
+        this.dragDropManager.clearUndo();
+    }
+
+    /**
+     * Take snapshot of current state before simulation
+     */
+    private takeSnapshot(): void {
+        this.preSimulationSnapshot = {
+            placedObjects: this.placedObjects.map(obj => ({
+                type: obj.objectType,
+                position: obj.gridPosition,
+                rotation: obj.rotation,
+            })),
+            inventoryCounts: this.inventoryPanel.getAllCounts(),
+        };
+    }
+
+    /**
+     * Restore state from snapshot
+     */
+    private restoreFromSnapshot(): void {
+        if (!this.preSimulationSnapshot) return;
+
         this.isSimulating = false;
-        this.hasPlacedObjects = false;
 
-        // Clear grid
-        this.grid.clear();
+        // Pause physics
+        this.matter.world.pause();
 
-        // Restart scene with same level
-        this.scene.restart({ level: this.currentLevel });
+        // Clear current placed objects
+        for (const obj of this.placedObjects) {
+            obj.destroy();
+        }
+        this.placedObjects = [];
+
+        // Reset fixtures
+        for (const obj of this.fixtureObjects) {
+            obj.destroy();
+        }
+        this.fixtureObjects = [];
+
+        // Reload fixtures
+        this.loadFixtures();
+
+        // Recreate placed objects from snapshot
+        for (const data of this.preSimulationSnapshot.placedObjects) {
+            const obj = createObject(this, this.grid, data.type, data.position, {
+                rotation: data.rotation,
+            });
+            if (obj) {
+                this.placedObjects.push(obj);
+            }
+        }
+
+        // Restore inventory counts
+        this.inventoryPanel.restoreCounts(this.preSimulationSnapshot.inventoryCounts);
+
+        this.preSimulationSnapshot = null;
     }
 
     private undoLastPlacement() {
-        // TODO: Implement undo functionality in EPIC 4
-        // This is a placeholder for the single-step undo feature
+        if (this.dragDropManager.undo()) {
+            // Update hasPlacedObjects flag
+            this.hasPlacedObjects = this.placedObjects.length > 0;
+        }
     }
 
     private getMuteText(muted: boolean): string {
@@ -213,37 +441,76 @@ export class GameScene extends Scene {
     }
 
     /**
-     * Expose grid for object placement (used by future object system)
+     * Called each frame
      */
+    update(_time: number, delta: number) {
+        if (this.isSimulating) {
+            // Update all objects
+            for (const obj of this.placedObjects) {
+                obj.update(delta);
+            }
+            for (const obj of this.fixtureObjects) {
+                obj.update(delta);
+            }
+        }
+    }
+
+    // ========== Public API for DragDropManager ==========
+
     getGrid(): Grid {
         return this.grid;
     }
 
-    /**
-     * Mark that objects have been placed (for exit confirmation)
-     */
     setHasPlacedObjects(hasPlaced: boolean): void {
         this.hasPlacedObjects = hasPlaced;
     }
 
-    /**
-     * Check if simulation is running
-     */
     getIsSimulating(): boolean {
         return this.isSimulating;
+    }
+
+    addPlacedObject(obj: GameObject): void {
+        this.placedObjects.push(obj);
+    }
+
+    removePlacedObject(obj: GameObject): void {
+        const index = this.placedObjects.indexOf(obj);
+        if (index >= 0) {
+            this.placedObjects.splice(index, 1);
+        }
+    }
+
+    getPlacedObjects(): GameObject[] {
+        return this.placedObjects;
     }
 
     /**
      * Trigger victory (called when ball enters basket)
      */
     triggerVictory(): void {
-        this.scene.start('VictoryScene', { level: this.currentLevel });
+        // Pause physics immediately (freeze frame)
+        this.matter.world.pause();
+
+        // Brief delay before transition
+        this.time.delayedCall(500, () => {
+            this.scene.start('VictoryScene', { level: this.currentLevel });
+        });
     }
 
     /**
      * Clean up when scene is destroyed
      */
     shutdown() {
+        // Destroy all objects
+        for (const obj of this.placedObjects) {
+            obj.destroy();
+        }
+        for (const obj of this.fixtureObjects) {
+            obj.destroy();
+        }
+
         this.grid?.destroy();
+        this.inventoryPanel?.destroy();
+        this.dragDropManager?.destroy();
     }
 }

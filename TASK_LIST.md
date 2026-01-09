@@ -149,70 +149,70 @@
 
 ---
 
-## **EPIC 4: GAMEPLAY MECHANICS** ⬜
+## **EPIC 4: GAMEPLAY MECHANICS** ✅
 
-### **Story 4.1: Implement Drag-and-Drop Placement** ⬜
+### **Story 4.1: Implement Drag-and-Drop Placement** ✅
 
 **Story:** Create the object placement system from inventory to grid
 
-- ⬜ **Task 4.1.1:** Create Inventory panel UI (right side, vertical list)
-- ⬜ **Task 4.1.2:** Display inventory items with icon, name, and count (e.g., "Ramp x3")
-- ⬜ **Task 4.1.3:** Implement drag start from inventory items
-- ⬜ **Task 4.1.4:** Show grid lines when dragging an object
-- ⬜ **Task 4.1.5:** Implement ghost preview showing snapped grid position while dragging
-- ⬜ **Task 4.1.6:** Implement red ghost preview for invalid placement (occupied cells)
-- ⬜ **Task 4.1.7:** Implement snap-to-grid on drop
-- ⬜ **Task 4.1.8:** Return object to inventory when dropped outside play area
-- ⬜ **Task 4.1.9:** Decrement inventory count on successful placement
+- ✅ **Task 4.1.1:** Create Inventory panel UI (right side, vertical list)
+- ✅ **Task 4.1.2:** Display inventory items with icon, name, and count (e.g., "Ramp x3")
+- ✅ **Task 4.1.3:** Implement drag start from inventory items
+- ✅ **Task 4.1.4:** Show grid lines when dragging an object
+- ✅ **Task 4.1.5:** Implement ghost preview showing snapped grid position while dragging
+- ✅ **Task 4.1.6:** Implement red ghost preview for invalid placement (occupied cells)
+- ✅ **Task 4.1.7:** Implement snap-to-grid on drop
+- ✅ **Task 4.1.8:** Return object to inventory when dropped outside play area
+- ✅ **Task 4.1.9:** Decrement inventory count on successful placement
 
 **Acceptance:** Objects can be dragged from inventory, snap to grid, show valid/invalid placement preview.
 
 ---
 
-### **Story 4.2: Implement Object Manipulation** ⬜
+### **Story 4.2: Implement Object Manipulation** ✅
 
 **Story:** Create rotation and repositioning of placed objects
 
-- ⬜ **Task 4.2.1:** Implement click-to-rotate on placed rotatable objects (cycles 90° increments)
-- ⬜ **Task 4.2.2:** Show rotation cursor icon when hovering over rotatable placed objects
-- ⬜ **Task 4.2.3:** Implement direct pickup to reposition placed objects
-- ⬜ **Task 4.2.4:** Update inventory count when objects are picked up from grid
-- ⬜ **Task 4.2.5:** Implement click detection for multi-cell objects (click anywhere on object)
-- ⬜ **Task 4.2.6:** Implement single-step undo (Ctrl+Z) for last placement action
-- ⬜ **Task 4.2.7:** Disable manipulation during simulation (edit mode only)
+- ✅ **Task 4.2.1:** Implement click-to-rotate on placed rotatable objects (cycles 90° increments)
+- ✅ **Task 4.2.2:** Show rotation cursor icon when hovering over rotatable placed objects
+- ✅ **Task 4.2.3:** Implement direct pickup to reposition placed objects
+- ✅ **Task 4.2.4:** Update inventory count when objects are picked up from grid
+- ✅ **Task 4.2.5:** Implement click detection for multi-cell objects (click anywhere on object)
+- ✅ **Task 4.2.6:** Implement single-step undo (Ctrl+Z) for last placement action
+- ✅ **Task 4.2.7:** Disable manipulation during simulation (edit mode only)
 
 **Acceptance:** Placed objects can be rotated, repositioned, and removed. Undo works for last action.
 
 ---
 
-### **Story 4.3: Implement Simulation Controls** ⬜
+### **Story 4.3: Implement Simulation Controls** ✅
 
 **Story:** Create Play/Reset functionality for running physics simulation
 
-- ⬜ **Task 4.3.1:** Create Play button that starts physics simulation
-- ⬜ **Task 4.3.2:** Create Reset button that instantly returns to pre-simulation state
-- ⬜ **Task 4.3.3:** Store pre-simulation state snapshot before Play
-- ⬜ **Task 4.3.4:** Disable Play button during simulation (must use Reset first)
-- ⬜ **Task 4.3.5:** Disable object placement/manipulation during simulation
-- ⬜ **Task 4.3.6:** Allow simulation to continue even if ball falls off screen (no auto-stop)
-- ⬜ **Task 4.3.7:** Implement Space key to start simulation (edit mode only)
-- ⬜ **Task 4.3.8:** Implement R key to reset level (any time)
+- ✅ **Task 4.3.1:** Create Play button that starts physics simulation
+- ✅ **Task 4.3.2:** Create Reset button that instantly returns to pre-simulation state
+- ✅ **Task 4.3.3:** Store pre-simulation state snapshot before Play
+- ✅ **Task 4.3.4:** Disable Play button during simulation (must use Reset first)
+- ✅ **Task 4.3.5:** Disable object placement/manipulation during simulation
+- ✅ **Task 4.3.6:** Allow simulation to continue even if ball falls off screen (no auto-stop)
+- ✅ **Task 4.3.7:** Implement Space key to start simulation (edit mode only)
+- ✅ **Task 4.3.8:** Implement R key to reset level (any time)
 
 **Acceptance:** Play starts simulation, Reset restores initial state instantly, keyboard shortcuts work.
 
 ---
 
-### **Story 4.4: Implement Win Condition** ⬜
+### **Story 4.4: Implement Win Condition** ✅
 
 **Story:** Create level completion detection and handling
 
-- ⬜ **Task 4.4.1:** Implement ball-basket collision detection (sensor trigger)
-- ⬜ **Task 4.4.2:** Trigger win instantly when ball contacts basket (any direction)
-- ⬜ **Task 4.4.3:** Implement victory freeze frame (pause simulation on win)
-- ⬜ **Task 4.4.4:** Display "Level Complete!" message with Continue button
-- ⬜ **Task 4.4.5:** Save level completion to localStorage on win
-- ⬜ **Task 4.4.6:** Unlock next level on completion (if not already unlocked)
-- ⬜ **Task 4.4.7:** Handle level 10 completion (show Final Victory screen)
+- ✅ **Task 4.4.1:** Implement ball-basket collision detection (sensor trigger)
+- ✅ **Task 4.4.2:** Trigger win instantly when ball contacts basket (any direction)
+- ✅ **Task 4.4.3:** Implement victory freeze frame (pause simulation on win)
+- ✅ **Task 4.4.4:** Display "Level Complete!" message with Continue button
+- ✅ **Task 4.4.5:** Save level completion to localStorage on win
+- ✅ **Task 4.4.6:** Unlock next level on completion (if not already unlocked)
+- ✅ **Task 4.4.7:** Handle level 10 completion (show Final Victory screen)
 
 **Acceptance:** Ball entering basket triggers win, simulation freezes, progress saves, next level unlocks.
 
@@ -512,7 +512,7 @@
 | 1. Project Setup | 2 | 14 | ✅ |
 | 2. Core Infrastructure | 3 | 19 | ✅ |
 | 3. Physics Objects | 4 | 23 | ✅ |
-| 4. Gameplay Mechanics | 4 | 27 | ⬜ |
+| 4. Gameplay Mechanics | 4 | 27 | ✅ |
 | 5. User Interface | 5 | 24 | ⬜ |
 | 6. Audio System | 3 | 12 | ⬜ |
 | 7. Visual Assets | 3 | 25 | ⬜ |
