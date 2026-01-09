@@ -1,5 +1,25 @@
 # Asset Generation Guide for Credible Machine
 
+## TL;DR - Recommended Approach
+
+For a game with only ~10 sprites and ~10 sounds, the batch/parallel pipeline described below is **over-engineered**. Here's what will actually be fastest:
+
+### Sounds (5-10 minutes total)
+Go to **[sfxr.me](https://sfxr.me/)**, click presets, tweak parameters, download WAV files manually. Done.
+
+### Sprites (30-60 minutes total)
+Use a purpose-built game asset generator instead of general image APIs:
+- **[PixelLab](https://www.pixellab.ai/)** - Built specifically for pixel art game sprites and spritesheets
+- **[PixelVibe by Rosebud](https://lab.rosebud.ai/ai-game-assets)** - Free tier with 10 generations/day, game-focused
+
+These handle the MS-DOS/VGA pixel art style better than Puter.js or Hugging Face, and you won't need post-processing pipelines.
+
+**Alternative**: Grab free assets from [OpenGameArt.org](https://opengameart.org/) or [itch.io asset packs](https://itch.io/game-assets/free).
+
+---
+
+## Full Guide (for reference)
+
 This document describes how to set up parallel batch generation of pixel art sprites and retro sound effects for the Credible Machine game.
 
 ## Overview
