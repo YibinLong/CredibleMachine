@@ -34,11 +34,19 @@ export class Preloader extends Scene {
             loadingText.destroy();
         });
 
-        // Load game assets here
-        // this.load.image('ball', 'assets/sprites/ball.png');
-
         // Load audio assets
         AudioManager.preloadAudio(this);
+
+        // Game Object Sprites
+        this.load.image('ball', 'assets/sprites/ball.png');
+        this.load.image('ramp', 'assets/sprites/ramp.png');
+        this.load.image('platform', 'assets/sprites/platform.png');
+        this.load.image('basket', 'assets/sprites/basket.png');
+        this.load.image('seesaw', 'assets/sprites/seesaw.png');
+        this.load.image('trampoline', 'assets/sprites/trampoline.png');
+        this.load.image('domino', 'assets/sprites/domino.png');
+        this.load.image('fan', 'assets/sprites/fan.png');
+        this.load.image('pressure-plate', 'assets/sprites/pressure-plate.png');
     }
 
     create() {
