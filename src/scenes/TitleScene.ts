@@ -1,8 +1,10 @@
 import { Scene, GameObjects } from 'phaser';
+import { GameState } from '../utils/GameState';
+import { COLORS, FONTS } from '../utils/Constants';
 
 export class TitleScene extends Scene {
-    private titleText!: GameObjects.Text;
     private playButton!: GameObjects.Text;
+    private muteButton!: GameObjects.Text;
 
     constructor() {
         super('TitleScene');
@@ -10,13 +12,14 @@ export class TitleScene extends Scene {
 
     create() {
         const { width, height } = this.cameras.main;
+        const gameState = GameState.getInstance();
 
         // Background color (MS-DOS blue)
-        this.cameras.main.setBackgroundColor('#000080');
+        this.cameras.main.setBackgroundColor(COLORS.DARK_BLUE);
 
         // Game title
-        this.titleText = this.add.text(width / 2, height / 3, 'CREDIBLE MACHINE', {
-            fontFamily: 'Arial Black',
+        this.add.text(width / 2, height / 3, 'CREDIBLE MACHINE', {
+            fontFamily: FONTS.PRIMARY,
             fontSize: '64px',
             color: '#ffffff',
             stroke: '#000000',
@@ -25,14 +28,14 @@ export class TitleScene extends Scene {
 
         // Subtitle
         this.add.text(width / 2, height / 3 + 60, 'A Rube Goldberg Puzzle Game', {
-            fontFamily: 'Arial',
-            fontSize: '24px',
+            fontFamily: FONTS.PRIMARY,
+            fontSize: '20px',
             color: '#aaaaaa'
         }).setOrigin(0.5);
 
         // Play button
         this.playButton = this.add.text(width / 2, height / 2 + 50, '[ PLAY ]', {
-            fontFamily: 'Arial Black',
+            fontFamily: FONTS.PRIMARY,
             fontSize: '48px',
             color: '#00ff00',
             stroke: '#000000',
@@ -43,5 +46,29 @@ export class TitleScene extends Scene {
         this.playButton.on('pointerdown', () => {
             this.scene.start('LevelSelectScene');
         });
+
+        // Mute toggle button (top-right corner)
+        this.muteButton = this.add.text(width - 20, 20, this.getMuteText(gameState.isAudioMuted()), {
+            fontFamily: FONTS.PRIMARY,
+            fontSize: '16px',
+            color: '#ffffff'
+        }).setOrigin(1, 0);
+
+        this.muteButton.setInteractive({ useHandCursor: true });
+        this.muteButton.on('pointerdown', () => {
+            const muted = gameState.toggleAudioMuted();
+            this.muteButton.setText(this.getMuteText(muted));
+        });
+
+        // Version / credits text
+        this.add.text(width / 2, height - 30, 'Inspired by The Incredible Machine (1993)', {
+            fontFamily: FONTS.PRIMARY,
+            fontSize: '14px',
+            color: '#666666'
+        }).setOrigin(0.5);
+    }
+
+    private getMuteText(muted: boolean): string {
+        return muted ? '[ SOUND: OFF ]' : '[ SOUND: ON ]';
     }
 }

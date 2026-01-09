@@ -1,4 +1,5 @@
 import { Scene } from 'phaser';
+import { GameState } from '../utils/GameState';
 
 export class Boot extends Scene {
     constructor() {
@@ -11,6 +12,9 @@ export class Boot extends Scene {
     }
 
     create() {
+        // Initialize GameState singleton (loads from localStorage)
+        GameState.getInstance();
+
         this.scene.start('Preloader');
     }
 }

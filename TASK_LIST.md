@@ -38,49 +38,49 @@
 
 ---
 
-## **EPIC 2: CORE GAME INFRASTRUCTURE** ⬜
+## **EPIC 2: CORE GAME INFRASTRUCTURE** ✅
 
-### **Story 2.1: Implement Grid System** ⬜
+### **Story 2.1: Implement Grid System** ✅
 
 **Story:** Create the grid-based play area for object placement
 
-- ⬜ **Task 2.1.1:** Create Grid class with 20x15 cells at 48x48 pixels each (960x720 total)
-- ⬜ **Task 2.1.2:** Implement cell occupancy tracking (which cells are occupied by which objects)
-- ⬜ **Task 2.1.3:** Implement multi-cell object support (objects spanning multiple cells like 3x1 ramp)
-- ⬜ **Task 2.1.4:** Add grid coordinate ↔ pixel position conversion utilities
-- ⬜ **Task 2.1.5:** Implement grid line rendering (visible only during drag operations)
-- ⬜ **Task 2.1.6:** Add cell availability checking for placement validation
+- ✅ **Task 2.1.1:** Create Grid class with 20x15 cells at 48x48 pixels each (960x720 total)
+- ✅ **Task 2.1.2:** Implement cell occupancy tracking (which cells are occupied by which objects)
+- ✅ **Task 2.1.3:** Implement multi-cell object support (objects spanning multiple cells like 3x1 ramp)
+- ✅ **Task 2.1.4:** Add grid coordinate ↔ pixel position conversion utilities
+- ✅ **Task 2.1.5:** Implement grid line rendering (visible only during drag operations)
+- ✅ **Task 2.1.6:** Add cell availability checking for placement validation
 
 **Acceptance:** Grid renders correctly, tracks cell occupancy, converts between grid/pixel coordinates.
 
 ---
 
-### **Story 2.2: Implement State Management** ⬜
+### **Story 2.2: Implement State Management** ✅
 
 **Story:** Create game state management and localStorage persistence
 
-- ⬜ **Task 2.2.1:** Create GameState manager class for runtime state
-- ⬜ **Task 2.2.2:** Implement localStorage wrapper for persistence (`credibleMachine` key)
-- ⬜ **Task 2.2.3:** Implement level completion tracking (array of completed level numbers)
-- ⬜ **Task 2.2.4:** Implement audio mute preference persistence
-- ⬜ **Task 2.2.5:** Create level unlock logic (levels 1-3 always unlocked, 4-10 sequential)
-- ⬜ **Task 2.2.6:** Implement progress reset functionality
+- ✅ **Task 2.2.1:** Create GameState manager class for runtime state
+- ✅ **Task 2.2.2:** Implement localStorage wrapper for persistence (`credibleMachine` key)
+- ✅ **Task 2.2.3:** Implement level completion tracking (array of completed level numbers)
+- ✅ **Task 2.2.4:** Implement audio mute preference persistence
+- ✅ **Task 2.2.5:** Create level unlock logic (levels 1-3 always unlocked, 4-10 sequential)
+- ✅ **Task 2.2.6:** Implement progress reset functionality
 
 **Acceptance:** Game state persists across browser sessions, level unlock logic works correctly.
 
 ---
 
-### **Story 2.3: Implement Scene Management** ⬜
+### **Story 2.3: Implement Scene Management** ✅
 
 **Story:** Create the game's scene structure and navigation
 
-- ⬜ **Task 2.3.1:** Create TitleScene with static display and "Play" button
-- ⬜ **Task 2.3.2:** Create LevelSelectScene with level buttons (1-10)
-- ⬜ **Task 2.3.3:** Create GameScene as main gameplay container
-- ⬜ **Task 2.3.4:** Create VictoryScene for level completion display
-- ⬜ **Task 2.3.5:** Create FinalVictoryScene for completing level 10
-- ⬜ **Task 2.3.6:** Implement scene transitions (instant, no animations per PRD)
-- ⬜ **Task 2.3.7:** Add confirmation dialog system for destructive actions (reset progress, exit with placed objects)
+- ✅ **Task 2.3.1:** Create TitleScene with static display and "Play" button
+- ✅ **Task 2.3.2:** Create LevelSelectScene with level buttons (1-10)
+- ✅ **Task 2.3.3:** Create GameScene as main gameplay container
+- ✅ **Task 2.3.4:** Create VictoryScene for level completion display
+- ✅ **Task 2.3.5:** Create FinalVictoryScene for completing level 10
+- ✅ **Task 2.3.6:** Implement scene transitions (instant, no animations per PRD)
+- ✅ **Task 2.3.7:** Add confirmation dialog system for destructive actions (reset progress, exit with placed objects)
 
 **Acceptance:** All scenes load correctly, navigation between scenes works, confirmation dialogs appear when needed.
 
@@ -510,7 +510,7 @@
 | Epic | Stories | Tasks | Status |
 |------|---------|-------|--------|
 | 1. Project Setup | 2 | 14 | ✅ |
-| 2. Core Infrastructure | 3 | 19 | ⬜ |
+| 2. Core Infrastructure | 3 | 19 | ✅ |
 | 3. Physics Objects | 4 | 23 | ⬜ |
 | 4. Gameplay Mechanics | 4 | 27 | ⬜ |
 | 5. User Interface | 5 | 24 | ⬜ |
