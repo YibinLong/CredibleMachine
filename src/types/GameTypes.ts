@@ -118,3 +118,57 @@ export interface GameSceneData {
 export interface VictorySceneData {
     level: number;
 }
+
+// ========== Level Data Types ==========
+
+/**
+ * Pre-placed fixture object in a level
+ */
+export interface FixtureData {
+    type: ObjectType;
+    position: GridPosition;
+    rotation?: number;
+    linkedObjectId?: string;  // For pressure plates
+}
+
+/**
+ * Available object in inventory for a level
+ */
+export interface InventoryItemData {
+    type: ObjectType;
+    count: number;
+}
+
+/**
+ * Complete level data definition
+ */
+export interface LevelData {
+    id: number;
+    name: string;
+    fixtures: FixtureData[];
+    inventory: InventoryItemData[];
+}
+
+/**
+ * Action for undo system
+ */
+export interface PlacementAction {
+    type: 'place' | 'remove' | 'rotate' | 'move';
+    objectType: ObjectType;
+    position: GridPosition;
+    rotation: number;
+    previousPosition?: GridPosition;
+    previousRotation?: number;
+}
+
+/**
+ * Snapshot of simulation state for reset
+ */
+export interface SimulationSnapshot {
+    placedObjects: Array<{
+        type: ObjectType;
+        position: GridPosition;
+        rotation: number;
+    }>;
+    inventoryCounts: Map<ObjectType, number>;
+}
