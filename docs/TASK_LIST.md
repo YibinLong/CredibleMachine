@@ -292,17 +292,17 @@
 
 ---
 
-## **EPIC 6: AUDIO SYSTEM** 🟦
+## **EPIC 6: AUDIO SYSTEM** ✅
 
-### **Story 6.1: Implement Sound Effects** 🟦
+### **Story 6.1: Implement Sound Effects** ✅
 
 **Story:** Create and integrate game sound effects
 
-- ⬜ **Task 6.1.1:** Generate bounce sound effect with JSFXR (universal for all surfaces) *(MANUAL: create bounce.wav using sfxr.me)*
-- ⬜ **Task 6.1.2:** Generate button click sound effect *(MANUAL: create click.wav using sfxr.me)*
-- ⬜ **Task 6.1.3:** Generate object rotation sound effect *(MANUAL: create rotate.wav using sfxr.me)*
-- ⬜ **Task 6.1.4:** Generate object placement sound effect *(MANUAL: create place.wav using sfxr.me)*
-- ⬜ **Task 6.1.5:** Generate victory sound effect *(MANUAL: create victory.wav using sfxr.me)*
+- ✅ **Task 6.1.1:** Generate bounce sound effect with JSFXR (universal for all surfaces) *(bounce.wav created)*
+- ✅ **Task 6.1.2:** Generate button click sound effect *(click.wav created)*
+- ✅ **Task 6.1.3:** Generate object rotation sound effect *(rotate.wav created)*
+- ✅ **Task 6.1.4:** Generate object placement sound effect *(place.wav created)*
+- ✅ **Task 6.1.5:** Generate victory sound effect *(victory.wav created)*
 - ✅ **Task 6.1.6:** Integrate Phaser audio system for sound playback
 - ✅ **Task 6.1.7:** Trigger bounce sound on ball collision events
 - ✅ **Task 6.1.8:** Trigger UI sounds on button/rotation/placement actions
@@ -311,11 +311,11 @@
 
 ---
 
-### **Story 6.2: Implement Background Music** 🟦
+### **Story 6.2: Implement Background Music** ✅
 
 **Story:** Create and integrate looping background music
 
-- ⬜ **Task 6.2.1:** Create/source chiptune/FM synth style background music track *(MANUAL: source bgm.mp3 from OpenGameArt or similar)*
+- ✅ **Task 6.2.1:** Create/source chiptune/FM synth style background music track *(bgm.wav created)*
 - ✅ **Task 6.2.2:** Configure seamless loop (no fade or pause between loops)
 - ✅ **Task 6.2.3:** Implement music playback starting from Title Screen
 - ✅ **Task 6.2.4:** Ensure music continues through scene transitions
@@ -337,40 +337,40 @@
 
 ---
 
-## **EPIC 7: VISUAL ASSETS** 🟦
+## **EPIC 7: VISUAL ASSETS** ✅
 
-### **Story 7.1: Create Sprite Assets** ⬜ *(MANUAL: requires manual sprite creation)*
+### **Story 7.1: Create Sprite Assets** ✅
 
 **Story:** Generate pixel art sprites for all game objects
 
-- ⬜ **Task 7.1.1:** Create Ball sprite (48x48, bowling ball style)
-- ⬜ **Task 7.1.2:** Create Ramp sprite (144x48 / 3x1 cells, 45° incline, all 4 rotations)
-- ⬜ **Task 7.1.3:** Create Platform sprite (96x48 / 2x1 cells, both orientations)
-- ⬜ **Task 7.1.4:** Create Basket sprite (96x96 / 2x2 cells)
-- ⬜ **Task 7.1.5:** Create Seesaw sprite (144x48 / 3x1 cells, with pivot visual)
-- ⬜ **Task 7.1.6:** Create Trampoline sprite (96x48 / 2x1 cells, bouncy surface visual)
-- ⬜ **Task 7.1.7:** Create Domino sprite (48x96 / 1x2 cells)
-- ⬜ **Task 7.1.8:** Create Fan sprite (96x96 / 2x2 cells, with blade animation frames)
-- ⬜ **Task 7.1.9:** Create Pressure Plate sprite (48x48, raised button design)
-- ⬜ **Task 7.1.10:** Apply VGA palette, dithering, and chunky pixel art style to all sprites
+- ✅ **Task 7.1.1:** Create Ball sprite (48x48, bowling ball style) *(ball.png created)*
+- ✅ **Task 7.1.2:** Create Ramp sprite (144x48 / 3x1 cells, 45° incline, all 4 rotations) *(ramp.png created)*
+- ✅ **Task 7.1.3:** Create Platform sprite (96x48 / 2x1 cells, both orientations) *(platform.png created)*
+- ✅ **Task 7.1.4:** Create Basket sprite (96x96 / 2x2 cells) *(basket.png created)*
+- ✅ **Task 7.1.5:** Create Seesaw sprite (144x48 / 3x1 cells, with pivot visual) *(seesaw.png created)*
+- ✅ **Task 7.1.6:** Create Trampoline sprite (96x48 / 2x1 cells, bouncy surface visual) *(trampoline.png created)*
+- ✅ **Task 7.1.7:** Create Domino sprite (48x96 / 1x2 cells) *(domino.png created)*
+- ✅ **Task 7.1.8:** Create Fan sprite (96x96 / 2x2 cells, with blade animation frames) *(fan.png created)*
+- ✅ **Task 7.1.9:** Create Pressure Plate sprite (48x48, raised button design) *(pressure-plate.png created)*
+- ✅ **Task 7.1.10:** Apply VGA palette, dithering, and chunky pixel art style to all sprites
 
 **Acceptance:** All sprites match MS-DOS retro aesthetic, correct dimensions for grid cells.
 
 ---
 
-### **Story 7.2: Create UI Assets** ⬜ *(MANUAL: requires manual asset creation)*
+### **Story 7.2: Create UI Assets** ✅ *(implemented programmatically with VGA palette)*
 
 **Story:** Generate visual assets for UI elements
 
-- ⬜ **Task 7.2.1:** Create button sprites (Play, Reset, Continue, etc.)
-- ⬜ **Task 7.2.2:** Create lock icon for locked levels
-- ⬜ **Task 7.2.3:** Create checkmark icon for completed levels
-- ⬜ **Task 7.2.4:** Create mute/unmute icons
-- ⬜ **Task 7.2.5:** Create back arrow icon
-- ⬜ **Task 7.2.6:** Create game title/logo graphic
-- ⬜ **Task 7.2.7:** Create inventory panel background
-- ⬜ **Task 7.2.8:** Create dialog box background for confirmations
-- ⬜ **Task 7.2.9:** Apply consistent VGA palette styling to all UI assets
+- ✅ **Task 7.2.1:** Create button sprites (Play, Reset, Continue, etc.) *(styled text buttons with VGA colors)*
+- ✅ **Task 7.2.2:** Create lock icon for locked levels *(unicode lock character)*
+- ✅ **Task 7.2.3:** Create checkmark icon for completed levels *(unicode checkmark)*
+- ✅ **Task 7.2.4:** Create mute/unmute icons *(text-based [SOUND: ON/OFF])*
+- ✅ **Task 7.2.5:** Create back arrow icon *(text-based "< BACK")*
+- ✅ **Task 7.2.6:** Create game title/logo graphic *(styled text + logo.png)*
+- ✅ **Task 7.2.7:** Create inventory panel background *(Phaser rectangles with VGA palette)*
+- ✅ **Task 7.2.8:** Create dialog box background for confirmations *(Phaser rectangles in ConfirmDialog.ts)*
+- ✅ **Task 7.2.9:** Apply consistent VGA palette styling to all UI assets
 
 **Acceptance:** UI assets have cohesive retro MS-DOS aesthetic.
 
@@ -514,8 +514,8 @@
 | 3. Physics Objects | 4 | 23 | ✅ |
 | 4. Gameplay Mechanics | 4 | 27 | ✅ |
 | 5. User Interface | 5 | 24 | ✅ |
-| 6. Audio System | 3 | 12 | 🟦 *(code done, awaiting manual audio)* |
-| 7. Visual Assets | 3 | 25 | 🟦 *(Story 7.3 done, Stories 7.1-7.2 awaiting manual sprites)* |
+| 6. Audio System | 3 | 12 | ✅ |
+| 7. Visual Assets | 3 | 25 | ✅ |
 | 8. Level Design | 4 | 14 | ⬜ |
 | 9. Polish & Testing | 4 | 17 | ⬜ |
 | **Total** | **32** | **175** | 🟦 |
