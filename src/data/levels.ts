@@ -75,8 +75,8 @@ const level3: LevelData = {
         { type: ObjectType.BASKET, position: { col: 2, row: 11 } },
     ],
     inventory: [
-        { type: ObjectType.RAMP, count: 1 },
-        { type: ObjectType.PLATFORM, count: 2 },
+        { type: ObjectType.RAMP, count: 3 },
+        { type: ObjectType.PLATFORM, count: 3 },
     ],
 };
 

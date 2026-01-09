@@ -42,6 +42,10 @@ export class GameScene extends Scene {
     private placedObjects: GameObject[] = [];
     private fixtureObjects: GameObject[] = [];
 
+    // Selection state
+    private selectedObject: GameObject | null = null;
+    private selectionGraphics: Phaser.GameObjects.Graphics | null = null;
+
     // Simulation state for reset
     private preSimulationSnapshot: SimulationSnapshot | null = null;
 
@@ -56,6 +60,8 @@ export class GameScene extends Scene {
         this.placedObjects = [];
         this.fixtureObjects = [];
         this.preSimulationSnapshot = null;
+        this.selectedObject = null;
+        this.selectionGraphics = null;
     }
 
     create() {
@@ -134,6 +140,9 @@ export class GameScene extends Scene {
 
         // Set up object interaction
         this.setupObjectInteraction();
+
+        // Pause physics until user clicks Play (fixes ball falling immediately on load)
+        this.matter.world.pause();
     }
 
     /**
@@ -163,7 +172,7 @@ export class GameScene extends Scene {
 
     /**
      * Set up click interaction for placed objects
-     * Click without drag = rotate, drag = reposition
+     * Click without drag = select, drag = reposition
      */
     private setupObjectInteraction(): void {
         let clickedObject: GameObject | null = null;
@@ -190,6 +199,9 @@ export class GameScene extends Scene {
                 if (obj && !obj.isFixed) {
                     clickedObject = obj;
                 }
+            } else {
+                // Clicked on empty space - deselect
+                this.selectObject(null);
             }
         });
 
@@ -202,15 +214,17 @@ export class GameScene extends Scene {
             // Start drag on first movement
             if (!hasMoved) {
                 hasMoved = true;
+                // Clear selection when starting drag
+                this.selectObject(null);
                 this.dragDropManager.startPlacedObjectDrag(clickedObject);
                 clickedObject = null;
             }
         });
 
-        // On pointer up, if no movement occurred, rotate the object
+        // On pointer up, if no movement occurred, select the object
         this.input.on('pointerup', () => {
             if (clickedObject && !hasMoved) {
-                this.dragDropManager.handlePlacedObjectClick(clickedObject);
+                this.selectObject(clickedObject);
             }
             clickedObject = null;
             hasMoved = false;
@@ -230,6 +244,81 @@ export class GameScene extends Scene {
             if (obj.id === id) return obj;
         }
         return null;
+    }
+
+    /**
+     * Select an object (or deselect if null)
+     */
+    private selectObject(obj: GameObject | null): void {
+        // Clear previous selection highlight
+        if (this.selectionGraphics) {
+            this.selectionGraphics.destroy();
+            this.selectionGraphics = null;
+        }
+
+        this.selectedObject = obj;
+
+        // Draw new selection highlight
+        if (obj) {
+            this.drawSelectionHighlight(obj);
+        }
+    }
+
+    /**
+     * Draw selection highlight around an object
+     */
+    private drawSelectionHighlight(obj: GameObject): void {
+        if (!this.selectionGraphics) {
+            this.selectionGraphics = this.add.graphics();
+        }
+
+        const pos = obj.getPixelPosition();
+        const gridSize = obj.size;
+        const pixelWidth = gridSize.cols * GRID.CELL_SIZE;
+        const pixelHeight = gridSize.rows * GRID.CELL_SIZE;
+
+        // Draw cyan dashed rectangle around the object
+        this.selectionGraphics.clear();
+        this.selectionGraphics.lineStyle(3, 0x00ffff, 1);
+        this.selectionGraphics.strokeRect(
+            pos.x - pixelWidth / 2 - 4,
+            pos.y - pixelHeight / 2 - 4,
+            pixelWidth + 8,
+            pixelHeight + 8
+        );
+    }
+
+    /**
+     * Update selection highlight (after rotation)
+     */
+    private updateSelectionHighlight(): void {
+        if (this.selectedObject && this.selectionGraphics) {
+            this.drawSelectionHighlight(this.selectedObject);
+        }
+    }
+
+    /**
+     * Delete selected object and return to inventory
+     */
+    private deleteSelectedObject(): void {
+        if (!this.selectedObject) return;
+
+        // Return to inventory
+        this.inventoryPanel.incrementCount(this.selectedObject.objectType);
+
+        // Remove from grid and scene
+        this.selectedObject.destroy();
+        this.removePlacedObject(this.selectedObject);
+
+        // Clear selection
+        this.selectedObject = null;
+        if (this.selectionGraphics) {
+            this.selectionGraphics.destroy();
+            this.selectionGraphics = null;
+        }
+
+        // Update placed objects flag
+        this.hasPlacedObjects = this.placedObjects.length > 0;
     }
 
     private createTopBar(width: number, gameState: GameState) {
@@ -289,10 +378,31 @@ export class GameScene extends Scene {
             }
         });
 
-        // R = Reset level
+        // R = Rotate selected object or object being dragged
         this.input.keyboard?.on('keydown-R', () => {
-            if (!this.confirmDialog.isShowing()) {
-                this.resetLevel();
+            if (this.isSimulating) return;
+            if (this.confirmDialog.isShowing()) return;
+
+            // If dragging, rotate the dragged object preview
+            if (this.dragDropManager.getIsDragging()) {
+                this.dragDropManager.rotateCurrentDrag();
+                return;
+            }
+
+            // If object is selected, rotate it
+            if (this.selectedObject && !this.selectedObject.isFixed) {
+                this.dragDropManager.handlePlacedObjectClick(this.selectedObject);
+                this.updateSelectionHighlight();
+            }
+        });
+
+        // X = Delete selected object (return to inventory)
+        this.input.keyboard?.on('keydown-X', () => {
+            if (this.isSimulating) return;
+            if (this.confirmDialog.isShowing()) return;
+
+            if (this.selectedObject && !this.selectedObject.isFixed) {
+                this.deleteSelectedObject();
             }
         });
 
@@ -324,6 +434,9 @@ export class GameScene extends Scene {
 
     private startSimulation() {
         if (this.isSimulating) return;
+
+        // Clear selection before simulation
+        this.selectObject(null);
 
         // Take snapshot before simulation
         this.takeSnapshot();

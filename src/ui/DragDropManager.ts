@@ -78,7 +78,7 @@ export class DragDropManager {
             }
         });
 
-        // Drag update
+        // Drag update (for inventory items using Phaser's drag system)
         this.scene.input.on('drag', (
             pointer: Phaser.Input.Pointer,
             _gameObject: Phaser.GameObjects.GameObject,
@@ -91,7 +91,16 @@ export class DragDropManager {
             this.ghostPreview.updatePosition(pointer.x, pointer.y);
         });
 
-        // Drag end
+        // Pointer move (for placed objects using manual drag detection)
+        this.scene.input.on('pointermove', (pointer: Phaser.Input.Pointer) => {
+            if (!this.isDragging) return;
+            if (this.dragSource !== 'placed') return;
+
+            // Update ghost preview position
+            this.ghostPreview.updatePosition(pointer.x, pointer.y);
+        });
+
+        // Drag end (for inventory items using Phaser's drag system)
         this.scene.input.on('dragend', (
             pointer: Phaser.Input.Pointer,
             _gameObject: Phaser.GameObjects.GameObject,
@@ -102,13 +111,26 @@ export class DragDropManager {
             this.handleDragEnd(pointer);
         });
 
-        // Right-click during drag to rotate
-        this.scene.input.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
-            if (this.isDragging && pointer.rightButtonDown()) {
-                this.ghostPreview.rotatePreview();
-                this.ghostPreview.updatePosition(pointer.x, pointer.y);
-            }
+        // Pointer up (for placed objects using manual drag detection)
+        this.scene.input.on('pointerup', (pointer: Phaser.Input.Pointer) => {
+            // Only handle if we're dragging a placed object
+            if (!this.isDragging) return;
+            if (this.dragSource !== 'placed') return;
+
+            this.handleDragEnd(pointer);
         });
+    }
+
+    /**
+     * Rotate the currently dragged object preview (called by R key)
+     */
+    public rotateCurrentDrag(): void {
+        if (this.isDragging) {
+            this.ghostPreview.rotatePreview();
+            // Update position to reflect new rotation bounds
+            const pointer = this.scene.input.activePointer;
+            this.ghostPreview.updatePosition(pointer.x, pointer.y);
+        }
     }
 
     /**
