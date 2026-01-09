@@ -337,9 +337,9 @@
 
 ---
 
-## **EPIC 7: VISUAL ASSETS** ⬜
+## **EPIC 7: VISUAL ASSETS** 🟦
 
-### **Story 7.1: Create Sprite Assets** ⬜
+### **Story 7.1: Create Sprite Assets** ⬜ *(MANUAL: requires manual sprite creation)*
 
 **Story:** Generate pixel art sprites for all game objects
 
@@ -358,7 +358,7 @@
 
 ---
 
-### **Story 7.2: Create UI Assets** ⬜
+### **Story 7.2: Create UI Assets** ⬜ *(MANUAL: requires manual asset creation)*
 
 **Story:** Generate visual assets for UI elements
 
@@ -376,16 +376,16 @@
 
 ---
 
-### **Story 7.3: Create Effects & Indicators** ⬜
+### **Story 7.3: Create Effects & Indicators** ✅
 
 **Story:** Generate visual effect assets and state indicators
 
-- ⬜ **Task 7.3.1:** Create ghost preview sprite (translucent version of objects)
-- ⬜ **Task 7.3.2:** Create invalid placement indicator (red tint)
-- ⬜ **Task 7.3.3:** Create fixed object indicator (lock icon or outline)
-- ⬜ **Task 7.3.4:** Create trigger link visual (dotted line or glow)
-- ⬜ **Task 7.3.5:** Create wind effect particles for Fan
-- ⬜ **Task 7.3.6:** Create victory particles (P1 feature, simple implementation)
+- ✅ **Task 7.3.1:** Create ghost preview sprite (translucent version of objects) *(already implemented in GhostPreview.ts)*
+- ✅ **Task 7.3.2:** Create invalid placement indicator (red tint) *(already implemented in GhostPreview.ts)*
+- ✅ **Task 7.3.3:** Create fixed object indicator (lock icon or outline) *(already implemented as corner brackets in GameObject.ts)*
+- ✅ **Task 7.3.4:** Create trigger link visual (dotted line or glow) *(already implemented in PressurePlate.ts)*
+- ✅ **Task 7.3.5:** Create wind effect particles for Fan *(already implemented in Fan.ts)*
+- ✅ **Task 7.3.6:** Create victory particles (P1 feature, simple implementation) *(implemented in VictoryParticles.ts)*
 
 **Acceptance:** All visual indicators clearly communicate game state to players.
 
@@ -514,11 +514,11 @@
 | 3. Physics Objects | 4 | 23 | ✅ |
 | 4. Gameplay Mechanics | 4 | 27 | ✅ |
 | 5. User Interface | 5 | 24 | ✅ |
-| 6. Audio System | 3 | 12 | 🟦 |
-| 7. Visual Assets | 3 | 25 | ⬜ |
+| 6. Audio System | 3 | 12 | 🟦 *(code done, awaiting manual audio)* |
+| 7. Visual Assets | 3 | 25 | 🟦 *(Story 7.3 done, Stories 7.1-7.2 awaiting manual sprites)* |
 | 8. Level Design | 4 | 14 | ⬜ |
 | 9. Polish & Testing | 4 | 17 | ⬜ |
-| **Total** | **32** | **175** | ⬜ |
+| **Total** | **32** | **175** | 🟦 |
 
 ---
 
