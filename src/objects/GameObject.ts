@@ -33,6 +33,7 @@ export abstract class GameObject {
 
     // Phaser objects
     protected graphics: GameObjects.Graphics | null = null;
+    protected sprite: GameObjects.Sprite | null = null;
     protected label: GameObjects.Text | null = null;
     protected body: MatterJS.BodyType | null = null;
 
@@ -227,7 +228,15 @@ export abstract class GameObject {
     protected updateVisuals(): void {
         if (this._isDestroyed) return;
 
-        // Clear and re-render
+        // Update sprite position and rotation if using sprite
+        if (this.sprite) {
+            const pos = this.getPixelPosition();
+            this.sprite.setPosition(pos.x, pos.y);
+            this.sprite.setRotation((this._rotation * Math.PI) / 180);
+            return;
+        }
+
+        // Clear and re-render graphics fallback
         if (this.graphics) {
             this.graphics.clear();
         }
@@ -236,6 +245,35 @@ export abstract class GameObject {
             this.label = null;
         }
         this.render();
+    }
+
+    /**
+     * Get the sprite texture key for this object type
+     * Override in subclasses to specify the texture
+     */
+    protected getSpriteKey(): string | null {
+        return null; // Default: no sprite
+    }
+
+    /**
+     * Check if sprite texture is available
+     */
+    protected hasSpriteTexture(): boolean {
+        const key = this.getSpriteKey();
+        return key !== null && this.scene.textures.exists(key);
+    }
+
+    /**
+     * Create a sprite for this object using the loaded texture
+     */
+    protected createSprite(): void {
+        const key = this.getSpriteKey();
+        if (!key || !this.scene.textures.exists(key)) return;
+
+        const pos = this.getPixelPosition();
+        this.sprite = this.scene.add.sprite(pos.x, pos.y, key);
+        this.sprite.setRotation((this._rotation * Math.PI) / 180);
+        this.sprite.setDepth(5);
     }
 
     /**
@@ -326,6 +364,12 @@ export abstract class GameObject {
         if (this.body && this.scene.matter) {
             this.scene.matter.world.remove(this.body);
             this.body = null;
+        }
+
+        // Destroy sprite
+        if (this.sprite) {
+            this.sprite.destroy();
+            this.sprite = null;
         }
 
         // Destroy graphics
