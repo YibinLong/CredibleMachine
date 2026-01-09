@@ -101,6 +101,7 @@ export interface CellOccupancy {
 export interface SaveData {
     completedLevels: number[];
     audioMuted: boolean;
+    tutorialShown?: boolean;  // Optional for backward compatibility
 }
 
 /**
