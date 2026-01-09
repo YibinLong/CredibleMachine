@@ -14,6 +14,7 @@ import { Grid } from '../utils/Grid';
 import { GameState } from '../utils/GameState';
 import { AudioManager, SFX } from '../utils/AudioManager';
 import { ConfirmDialog } from '../ui/ConfirmDialog';
+import { TutorialOverlay } from '../ui/TutorialOverlay';
 import { InventoryPanel } from '../ui/InventoryPanel';
 import { DragDropManager } from '../ui/DragDropManager';
 import { GRID, COLORS, FONTS, UI } from '../utils/Constants';
@@ -33,6 +34,7 @@ export class GameScene extends Scene {
     private inventoryPanel!: InventoryPanel;
     private dragDropManager!: DragDropManager;
     private confirmDialog!: ConfirmDialog;
+    private tutorialOverlay!: TutorialOverlay;
     private audioManager!: AudioManager;
 
     // UI elements
@@ -138,6 +140,15 @@ export class GameScene extends Scene {
         this.confirmDialog = new ConfirmDialog(this);
         this.add.existing(this.confirmDialog);
 
+        // Create tutorial overlay
+        this.tutorialOverlay = new TutorialOverlay(this);
+        this.add.existing(this.tutorialOverlay);
+
+        // Show tutorial on first Level 1 play
+        if (TutorialOverlay.shouldShow(this.currentLevel)) {
+            this.tutorialOverlay.show();
+        }
+
         // Set up keyboard shortcuts
         this.setupKeyboardShortcuts();
 
@@ -210,6 +221,7 @@ export class GameScene extends Scene {
         this.input.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
             if (this.isSimulating) return;
             if (this.confirmDialog.isShowing()) return;
+            if (this.tutorialOverlay.isShowing()) return;
             if (this.dragDropManager.getIsDragging()) return;
 
             // Only handle left clicks in play area
@@ -411,7 +423,7 @@ export class GameScene extends Scene {
     private setupKeyboardShortcuts() {
         // Space = Start simulation (edit mode only)
         this.input.keyboard?.on('keydown-SPACE', () => {
-            if (!this.isSimulating && !this.confirmDialog.isShowing()) {
+            if (!this.isSimulating && !this.confirmDialog.isShowing() && !this.tutorialOverlay.isShowing()) {
                 this.startSimulation();
             }
         });
@@ -420,6 +432,7 @@ export class GameScene extends Scene {
         this.input.keyboard?.on('keydown-R', () => {
             if (this.isSimulating) return;
             if (this.confirmDialog.isShowing()) return;
+            if (this.tutorialOverlay.isShowing()) return;
 
             // If dragging, rotate the dragged object preview
             if (this.dragDropManager.getIsDragging()) {
@@ -438,6 +451,7 @@ export class GameScene extends Scene {
         this.input.keyboard?.on('keydown-X', () => {
             if (this.isSimulating) return;
             if (this.confirmDialog.isShowing()) return;
+            if (this.tutorialOverlay.isShowing()) return;
 
             if (this.selectedObject && !this.selectedObject.isFixed) {
                 this.deleteSelectedObject();
@@ -446,14 +460,14 @@ export class GameScene extends Scene {
 
         // ESC = Back to level select (with confirmation if objects placed)
         this.input.keyboard?.on('keydown-ESC', () => {
-            if (!this.confirmDialog.isShowing()) {
+            if (!this.confirmDialog.isShowing() && !this.tutorialOverlay.isShowing()) {
                 this.handleBackButton();
             }
         });
 
         // Ctrl+Z = Undo last placement (edit mode only)
         this.input.keyboard?.on('keydown-Z', (event: KeyboardEvent) => {
-            if (event.ctrlKey && !this.isSimulating && !this.confirmDialog.isShowing()) {
+            if (event.ctrlKey && !this.isSimulating && !this.confirmDialog.isShowing() && !this.tutorialOverlay.isShowing()) {
                 this.undoLastPlacement();
             }
         });
@@ -663,5 +677,6 @@ export class GameScene extends Scene {
         this.grid?.destroy();
         this.inventoryPanel?.destroy();
         this.dragDropManager?.destroy();
+        this.tutorialOverlay?.destroy();
     }
 }

@@ -16,10 +16,12 @@ export class GameState {
 
     private completedLevels: Set<number>;
     private audioMuted: boolean;
+    private tutorialShown: boolean;
 
     private constructor() {
         this.completedLevels = new Set();
         this.audioMuted = false;
+        this.tutorialShown = false;
         this.load();
     }
 
@@ -43,11 +45,13 @@ export class GameState {
                 const parsed: SaveData = JSON.parse(data);
                 this.completedLevels = new Set(parsed.completedLevels || []);
                 this.audioMuted = parsed.audioMuted ?? false;
+                this.tutorialShown = parsed.tutorialShown ?? false;
             }
         } catch {
             // Handle corrupted data - reset to defaults
             this.completedLevels = new Set();
             this.audioMuted = false;
+            this.tutorialShown = false;
         }
     }
 
@@ -58,6 +62,7 @@ export class GameState {
         const data: SaveData = {
             completedLevels: Array.from(this.completedLevels).sort((a, b) => a - b),
             audioMuted: this.audioMuted,
+            tutorialShown: this.tutorialShown,
         };
         try {
             localStorage.setItem(GAME.STORAGE_KEY, JSON.stringify(data));
@@ -170,11 +175,12 @@ export class GameState {
     // ========== Progress Management ==========
 
     /**
-     * Reset all progress (completed levels and audio preference)
+     * Reset all progress (completed levels, audio preference, and tutorial state)
      */
     resetProgress(): void {
         this.completedLevels.clear();
         this.audioMuted = false;
+        this.tutorialShown = false;
         this.save();
     }
 
@@ -190,5 +196,22 @@ export class GameState {
      */
     hasCompletedAllLevels(): boolean {
         return this.completedLevels.size === GAME.TOTAL_LEVELS;
+    }
+
+    // ========== Tutorial Tracking ==========
+
+    /**
+     * Check if tutorial has been shown
+     */
+    hasTutorialBeenShown(): boolean {
+        return this.tutorialShown;
+    }
+
+    /**
+     * Mark tutorial as shown and persist
+     */
+    markTutorialShown(): void {
+        this.tutorialShown = true;
+        this.save();
     }
 }
