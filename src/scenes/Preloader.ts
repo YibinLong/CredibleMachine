@@ -1,4 +1,5 @@
 import { Scene } from 'phaser';
+import { AudioManager } from '../utils/AudioManager';
 
 export class Preloader extends Scene {
     constructor() {
@@ -35,6 +36,9 @@ export class Preloader extends Scene {
 
         // Load game assets here
         // this.load.image('ball', 'assets/sprites/ball.png');
+
+        // Load audio assets
+        AudioManager.preloadAudio(this);
     }
 
     create() {

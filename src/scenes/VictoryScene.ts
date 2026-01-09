@@ -1,10 +1,12 @@
 import { Scene } from 'phaser';
 import { GameState } from '../utils/GameState';
+import { AudioManager, SFX } from '../utils/AudioManager';
 import { COLORS, FONTS, GAME } from '../utils/Constants';
 import { VictorySceneData } from '../types';
 
 export class VictoryScene extends Scene {
     private completedLevel: number = 1;
+    private audioManager!: AudioManager;
 
     constructor() {
         super('VictoryScene');
@@ -17,6 +19,13 @@ export class VictoryScene extends Scene {
     create() {
         const { width, height } = this.cameras.main;
         const gameState = GameState.getInstance();
+
+        // Update audio manager scene reference
+        this.audioManager = AudioManager.getInstance();
+        this.audioManager.setScene(this);
+
+        // Play victory sound
+        this.audioManager.playSound(SFX.VICTORY);
 
         // Save level completion
         gameState.completeLevel(this.completedLevel);
@@ -61,6 +70,7 @@ export class VictoryScene extends Scene {
 
         nextLevelBtn.setInteractive({ useHandCursor: true });
         nextLevelBtn.on('pointerdown', () => {
+            this.audioManager.playSound(SFX.CLICK);
             this.scene.start('GameScene', { level: nextLevel });
         });
 
@@ -73,6 +83,7 @@ export class VictoryScene extends Scene {
 
         selectBtn.setInteractive({ useHandCursor: true });
         selectBtn.on('pointerdown', () => {
+            this.audioManager.playSound(SFX.CLICK);
             this.scene.start('LevelSelectScene');
         });
     }

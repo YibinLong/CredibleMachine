@@ -13,6 +13,7 @@ import { Scene } from 'phaser';
 import { ObjectType, GridPosition, PlacementAction } from '../types';
 import { Grid } from '../utils/Grid';
 import { GRID } from '../utils/Constants';
+import { AudioManager, SFX } from '../utils/AudioManager';
 import { InventoryPanel } from './InventoryPanel';
 import { InventoryItem } from './InventoryItem';
 import { GhostPreview } from './GhostPreview';
@@ -34,6 +35,7 @@ export class DragDropManager {
     private grid: Grid;
     private inventoryPanel: InventoryPanel;
     private ghostPreview: GhostPreview;
+    private audioManager: AudioManager;
 
     // Drag state
     private isDragging: boolean = false;
@@ -53,6 +55,7 @@ export class DragDropManager {
         this.scene = scene;
         this.grid = grid;
         this.inventoryPanel = inventoryPanel;
+        this.audioManager = AudioManager.getInstance();
 
         // Create ghost preview
         this.ghostPreview = new GhostPreview(scene, grid);
@@ -127,6 +130,7 @@ export class DragDropManager {
     public rotateCurrentDrag(): void {
         if (this.isDragging) {
             this.ghostPreview.rotatePreview();
+            this.audioManager.playSound(SFX.ROTATE);
             // Update position to reflect new rotation bounds
             const pointer = this.scene.input.activePointer;
             this.ghostPreview.updatePosition(pointer.x, pointer.y);
@@ -195,6 +199,9 @@ export class DragDropManager {
                 this.ghostPreview.gridPosition,
                 this.ghostPreview.currentRotation
             );
+
+            // Play placement sound
+            this.audioManager.playSound(SFX.PLACE);
 
             // Decrement inventory (already incremented if from placed)
             if (wasFromInventory) {
@@ -275,6 +282,9 @@ export class DragDropManager {
             const rotated = obj.rotate();
 
             if (rotated) {
+                // Play rotation sound
+                this.audioManager.playSound(SFX.ROTATE);
+
                 // Record for undo
                 this.lastAction = {
                     type: 'rotate',
